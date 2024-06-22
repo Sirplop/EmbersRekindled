@@ -27,7 +27,6 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -141,7 +140,6 @@ public class EmberInjectorBlockEntity extends BlockEntity implements ISoundContr
 		}
 		if (wasWorking != blockEntity.isWorking || previousDist != blockEntity.distance) {
 			blockEntity.setChanged();
-			blockEntity.syncToClient();
 		}
 	}
 
@@ -159,12 +157,11 @@ public class EmberInjectorBlockEntity extends BlockEntity implements ISoundContr
 		capability.invalidate();
 	}
 
-	public void syncToClient() {
-		if (level instanceof ServerLevel serverLevel) {
-			for (ServerPlayer serverplayer : serverLevel.getServer().getPlayerList().getPlayers()) {
-				serverplayer.connection.send(this.getUpdatePacket());
-			}
-		}
+	@Override
+	public void setChanged() {
+		super.setChanged();
+		if (!level.isClientSide())
+			((ServerLevel) level).getChunkSource().blockChanged(worldPosition);
 	}
 
 	@Override

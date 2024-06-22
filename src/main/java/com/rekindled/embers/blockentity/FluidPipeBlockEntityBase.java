@@ -18,7 +18,6 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -46,9 +45,6 @@ public abstract class FluidPipeBlockEntityBase extends PipeBlockEntityBase imple
 	public FluidTank tank;
 	public LazyOptional<IFluidHandler> holder = LazyOptional.of(() -> tank);
 	Direction lastTransfer;
-	boolean syncTank = true;
-	boolean syncCloggedFlag = true;
-	boolean syncTransfer = true;
 	int ticksExisted;
 	int lastRobin;
 
@@ -61,21 +57,9 @@ public abstract class FluidPipeBlockEntityBase extends PipeBlockEntityBase imple
 		tank = new FluidTank(getCapacity()) {
 			@Override
 			protected void onContentsChanged() {
-				FluidPipeBlockEntityBase.this.syncTank = true;
 				FluidPipeBlockEntityBase.this.setChanged();
 			}
 		};
-	}
-
-	public void onLoad() {
-		syncTransfer = true;
-		syncCloggedFlag = true;
-		if (level instanceof ServerLevel serverLevel) {
-			for (ServerPlayer serverplayer : serverLevel.getServer().getPlayerList().getPlayers()) {
-				serverplayer.connection.send(this.getUpdatePacket());
-			}
-			this.resetSync();
-		}
 	}
 
 	public abstract int getCapacity();
@@ -152,7 +136,6 @@ public abstract class FluidPipeBlockEntityBase extends PipeBlockEntityBase imple
 					IFluidHandler handler = fluidHandlers[facing.get3DDataValue()];
 					fluidMoved = blockEntity.pushStack(passStack, facing, handler);
 					if (blockEntity.lastTransfer != facing) {
-						blockEntity.syncTransfer = true;
 						blockEntity.lastTransfer = facing;
 						blockEntity.setChanged();
 					}
@@ -170,7 +153,6 @@ public abstract class FluidPipeBlockEntityBase extends PipeBlockEntityBase imple
 		//    resetFrom();
 		if (blockEntity.tank.getFluidAmount() <= 0) {
 			if (blockEntity.lastTransfer != null && !fluidMoved) {
-				blockEntity.syncTransfer = true;
 				blockEntity.lastTransfer = null;
 				blockEntity.setChanged();
 			}
@@ -179,7 +161,6 @@ public abstract class FluidPipeBlockEntityBase extends PipeBlockEntityBase imple
 		}
 		if (blockEntity.clogged == fluidMoved) {
 			blockEntity.clogged = !fluidMoved;
-			blockEntity.syncCloggedFlag = true;
 			blockEntity.setChanged();
 		}
 	}
@@ -216,16 +197,6 @@ public abstract class FluidPipeBlockEntityBase extends PipeBlockEntityBase imple
 		return false;
 	}
 
-	protected void resetSync() {
-		syncTank = false;
-		syncCloggedFlag = false;
-		syncTransfer = false;
-	}
-
-	protected boolean requiresSync() {
-		return true;//syncTank || syncCloggedFlag || syncTransfer;
-	}
-
 	@Override
 	public void load(CompoundTag nbt) {
 		super.load(nbt);
@@ -256,12 +227,9 @@ public abstract class FluidPipeBlockEntityBase extends PipeBlockEntityBase imple
 	@Override
 	public CompoundTag getUpdateTag() {
 		CompoundTag nbt = super.getUpdateTag();
-		if (syncTank)
-			writeTank(nbt);
-		if (syncCloggedFlag)
-			writeCloggedFlag(nbt);
-		if (syncTransfer)
-			writeLastTransfer(nbt);
+		writeTank(nbt);
+		writeCloggedFlag(nbt);
+		writeLastTransfer(nbt);
 		return nbt;
 	}
 
@@ -288,12 +256,8 @@ public abstract class FluidPipeBlockEntityBase extends PipeBlockEntityBase imple
 	@Override
 	public void setChanged() {
 		super.setChanged();
-		if (requiresSync() && level instanceof ServerLevel serverLevel) {
-			for (ServerPlayer serverplayer : serverLevel.getServer().getPlayerList().getPlayers()) {
-				serverplayer.connection.send(this.getUpdatePacket());
-			}
-			this.resetSync();
-		}
+		if (!level.isClientSide())
+			((ServerLevel) level).getChunkSource().blockChanged(worldPosition);
 	}
 
 	@Override

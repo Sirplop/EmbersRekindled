@@ -9,12 +9,6 @@ import com.rekindled.embers.api.tile.IExtraCapabilityInformation;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
@@ -37,18 +31,6 @@ public class MechanicalPumpTopBlockEntity extends FluidHandlerBlockEntity implem
 		};
 	}
 
-	@Override
-	public CompoundTag getUpdateTag() {
-		CompoundTag nbt = super.getUpdateTag();
-		saveAdditional(nbt);
-		return nbt;
-	}
-
-	@Override
-	public Packet<ClientGamePacketListener> getUpdatePacket() {
-		return ClientboundBlockEntityDataPacket.create(this);
-	}
-
 	public int getCapacity(){
 		return tank.getCapacity();
 	}
@@ -59,16 +41,6 @@ public class MechanicalPumpTopBlockEntity extends FluidHandlerBlockEntity implem
 
 	public FluidTank getTank() {
 		return tank;
-	}
-
-	@Override
-	public void setChanged() {
-		super.setChanged();
-		if (level instanceof ServerLevel serverLevel) {
-			for (ServerPlayer serverplayer : serverLevel.getServer().getPlayerList().getPlayers()) {
-				serverplayer.connection.send(this.getUpdatePacket());
-			}
-		}
 	}
 
 	@Override

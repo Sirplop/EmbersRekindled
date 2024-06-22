@@ -42,7 +42,6 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -150,11 +149,8 @@ public class HearthCoilBlockEntity extends BlockEntity implements ISoundControll
 	@Override
 	public void setChanged() {
 		super.setChanged();
-		if (level instanceof ServerLevel serverLevel) {
-			for (ServerPlayer serverplayer : serverLevel.getServer().getPlayerList().getPlayers()) {
-				serverplayer.connection.send(this.getUpdatePacket());
-			}
-		}
+		if (!level.isClientSide())
+			((ServerLevel) level).getChunkSource().blockChanged(worldPosition);
 	}
 
 	public static <T extends AbstractCookingRecipe> void serverTick(Level level, BlockPos pos, BlockState state, HearthCoilBlockEntity blockEntity) {

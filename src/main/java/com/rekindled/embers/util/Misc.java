@@ -28,7 +28,10 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.Packet;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerChunkCache;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.Container;
@@ -46,6 +49,7 @@ import net.minecraft.world.item.TieredItem;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
@@ -466,5 +470,12 @@ public class Misc {
 			return InteractionResult.SUCCESS;
 		}
 		return InteractionResult.PASS;
+	}
+
+	@SuppressWarnings("resource")
+	public static void sendToTrackingPlayers(Level level, BlockPos pos, Packet<?> packet) {
+		for (ServerPlayer serverplayer : ((ServerChunkCache) level.getChunkSource()).chunkMap.getPlayers(new ChunkPos(pos), false)) {
+			serverplayer.connection.send(packet);
+		}
 	}
 }

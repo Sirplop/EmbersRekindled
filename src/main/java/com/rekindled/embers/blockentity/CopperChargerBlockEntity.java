@@ -31,7 +31,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -77,7 +77,6 @@ public class CopperChargerBlockEntity extends BlockEntity implements ISoundContr
 	public boolean isWorking;
 	public boolean wasWorking;
 	public boolean reverse = false;
-	public boolean dirty = false;
 	protected List<UpgradeContext> upgrades;
 
 	public static final int SOUND_PROCESS = 1;
@@ -168,11 +167,6 @@ public class CopperChargerBlockEntity extends BlockEntity implements ISoundContr
 		if (blockEntity.wasWorking != blockEntity.isWorking) {
 			blockEntity.setChanged();
 		}
-		if (blockEntity.dirty) {
-			for (ServerPlayer serverplayer : level.getServer().getPlayerList().getPlayers()) {
-				serverplayer.connection.send(blockEntity.getUpdatePacket());
-			}
-		}
 	}
 
 	@Override
@@ -231,7 +225,8 @@ public class CopperChargerBlockEntity extends BlockEntity implements ISoundContr
 	@Override
 	public void setChanged() {
 		super.setChanged();
-		dirty = true;
+		if (!level.isClientSide())
+			((ServerLevel) level).getChunkSource().blockChanged(worldPosition);
 	}
 
 	@Override

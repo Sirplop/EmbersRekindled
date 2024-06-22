@@ -33,7 +33,6 @@ import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.random.WeightedRandom;
 import net.minecraft.world.item.ItemStack;
@@ -262,11 +261,8 @@ public class EmberBoreBlockEntity extends BlockEntity implements ISoundControlle
 	@Override
 	public void setChanged() {
 		super.setChanged();
-		if (level instanceof ServerLevel serverLevel) {
-			for (ServerPlayer serverplayer : serverLevel.getServer().getPlayerList().getPlayers()) {
-				serverplayer.connection.send(this.getUpdatePacket());
-			}
-		}
+		if (!level.isClientSide())
+			((ServerLevel) level).getChunkSource().blockChanged(worldPosition);
 	}
 
 	@Override

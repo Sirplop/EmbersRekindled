@@ -28,7 +28,6 @@ public class FluidTransferBlockEntity extends FluidPipeBlockEntityBase {
 	public static final int PRIORITY_TRANSFER = -10;
 	public FluidStack filterFluid = FluidStack.EMPTY;
 	Random random = new Random();
-	public boolean syncFilter;
 	IFluidHandler outputSide;
 	public LazyOptional<IFluidHandler> outputHolder = LazyOptional.of(() -> outputSide);
 
@@ -42,7 +41,6 @@ public class FluidTransferBlockEntity extends FluidPipeBlockEntityBase {
 		tank = new FluidTank(getCapacity()) {
 			@Override
 			protected void onContentsChanged() {
-				FluidTransferBlockEntity.this.syncTank = true;
 				FluidTransferBlockEntity.this.setChanged();
 			}
 
@@ -60,12 +58,6 @@ public class FluidTransferBlockEntity extends FluidPipeBlockEntityBase {
 			}
 		};
 		outputSide = Misc.makeRestrictedFluidHandler(tank, false, true);
-	}
-
-	@Override
-	public void onLoad() {
-		syncFilter = true;
-		super.onLoad();
 	}
 
 	@Override
@@ -91,17 +83,6 @@ public class FluidTransferBlockEntity extends FluidPipeBlockEntityBase {
 
 	private void writeFilter(CompoundTag nbt) {
 		nbt.put("filter", filterFluid.writeToNBT(new CompoundTag()));
-	}
-
-	@Override
-	protected boolean requiresSync() {
-		return syncFilter || super.requiresSync();
-	}
-
-	@Override
-	protected void resetSync() {
-		super.resetSync();
-		syncFilter = false;
 	}
 
 	public static void serverTick(Level level, BlockPos pos, BlockState state, FluidTransferBlockEntity blockEntity) {

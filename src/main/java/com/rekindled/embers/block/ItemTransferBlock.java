@@ -94,7 +94,6 @@ public class ItemTransferBlock extends BaseEntityBlock implements SimpleWaterlog
 			}
 			transfer.setupFilter();
 
-			transfer.syncFilter = true;
 			transfer.setChanged();
 			return InteractionResult.SUCCESS;
 		}
