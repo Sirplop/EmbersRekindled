@@ -14,6 +14,7 @@ import com.rekindled.embers.api.projectile.EffectArea;
 import com.rekindled.embers.api.projectile.EffectDamage;
 import com.rekindled.embers.api.projectile.IProjectilePreset;
 import com.rekindled.embers.api.projectile.ProjectileFireball;
+import com.rekindled.embers.damage.DamageEmber;
 import com.rekindled.embers.datagen.EmbersDamageTypes;
 import com.rekindled.embers.datagen.EmbersSounds;
 import com.rekindled.embers.particle.GlowParticleOptions;
@@ -62,7 +63,7 @@ public class CinderStaffItem extends Item implements IProjectileWeapon {
 			float aoeSize = (float) (charge * ConfigManager.CINDER_STAFF_AOE_SIZE.get());
 			int lifetime = charge >= 0.06 ? ConfigManager.CINDER_STAFF_LIFETIME.get() : 5;
 
-			Function<Entity, DamageSource> damageSource = e -> new DamageSource(level.registryAccess().registry(Registries.DAMAGE_TYPE).get().getHolderOrThrow(EmbersDamageTypes.EMBER_KEY), e, entity);
+			Function<Entity, DamageSource> damageSource = e -> new DamageEmber(level.registryAccess().registry(Registries.DAMAGE_TYPE).get().getHolderOrThrow(EmbersDamageTypes.EMBER_KEY), e, entity);
 			EffectArea effect = new EffectArea(new EffectDamage(damage, damageSource, 1, 1.0), aoeSize, false);
 			ProjectileFireball fireball = new ProjectileFireball(entity, launchPos, entity.getLookAngle().scale(0.85), size, lifetime, effect);
 			EmberProjectileEvent event = new EmberProjectileEvent(entity, stack, charge, fireball);

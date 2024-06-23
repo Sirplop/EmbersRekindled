@@ -2,6 +2,7 @@ package com.rekindled.embers.entity;
 
 import com.rekindled.embers.RegistryManager;
 import com.rekindled.embers.api.projectile.EffectDamage;
+import com.rekindled.embers.damage.DamageEmber;
 import com.rekindled.embers.datagen.EmbersDamageTypes;
 import com.rekindled.embers.datagen.EmbersSounds;
 
@@ -62,7 +63,7 @@ public class AncientGolemEntity extends Monster {
 			if (!level().isClientSide()) {
 				playSound(EmbersSounds.FIREBALL.get(), 1.0f, 1.0f);
 				EmberProjectileEntity proj = RegistryManager.EMBER_PROJECTILE.get().create(level());
-				DamageSource damage = new DamageSource(this.level().registryAccess().registry(Registries.DAMAGE_TYPE).get().getHolderOrThrow(EmbersDamageTypes.EMBER_KEY), proj, this);
+				DamageSource damage = new DamageEmber(this.level().registryAccess().registry(Registries.DAMAGE_TYPE).get().getHolderOrThrow(EmbersDamageTypes.EMBER_KEY), proj, this);
 				EffectDamage effect = new EffectDamage(4.0f, e -> damage, 1, 1.0f);
 
 				Vec3 lookVec = getLookAngle();

@@ -307,7 +307,8 @@ public class EmbersLang extends LanguageProvider {
 		add(Embers.MODID + ".alchemy_hint.white", "%s pale spots");
 		add(Embers.MODID + ".alchemy_hint.and", "%s and %s");
 
-		add("death.attack.ember", "%1$s was incinerated by %2$s");
+		add("death.attack.ember", "%1$s was incinerated");
+		add("death.attack.ember.player", "%1$s was incinerated by %2$s");
 		add("death.attack.ember.item", "%1$s was incinerated by %2$s using %3$s");
 
 		add(Embers.MODID + ".decimal_format.ember", "0.#");

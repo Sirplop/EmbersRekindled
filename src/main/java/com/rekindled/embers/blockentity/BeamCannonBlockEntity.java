@@ -11,6 +11,7 @@ import com.rekindled.embers.api.power.IEmberPacketReceiver;
 import com.rekindled.embers.api.tile.ISparkable;
 import com.rekindled.embers.api.upgrades.UpgradeContext;
 import com.rekindled.embers.api.upgrades.UpgradeUtil;
+import com.rekindled.embers.damage.DamageEmber;
 import com.rekindled.embers.datagen.EmbersDamageTypes;
 import com.rekindled.embers.datagen.EmbersSounds;
 import com.rekindled.embers.network.PacketHandler;
@@ -154,7 +155,7 @@ public class BeamCannonBlockEntity extends BlockEntity {
 		}
 		List<Entity> entities = level.getEntities((Entity) null, new AABB(worldPosition.getCenter(), hitPos.getCenter()), EntitySelector.NO_SPECTATORS);
 		for (Entity entity : entities) {
-			DamageSource damageSource = new DamageSource(level.registryAccess().registry(Registries.DAMAGE_TYPE).get().getHolderOrThrow(EmbersDamageTypes.EMBER_KEY), worldPosition.getCenter());
+			DamageSource damageSource = new DamageEmber(level.registryAccess().registry(Registries.DAMAGE_TYPE).get().getHolderOrThrow(EmbersDamageTypes.EMBER_KEY), worldPosition.getCenter());
 			entity.hurt(damageSource, (float)damage);
 		}
 
