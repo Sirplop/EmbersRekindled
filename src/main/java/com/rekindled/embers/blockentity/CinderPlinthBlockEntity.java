@@ -84,7 +84,8 @@ public class CinderPlinthBlockEntity extends BlockEntity implements ISoundContro
 	public void load(CompoundTag nbt) {
 		super.load(nbt);
 		capability.deserializeNBT(nbt);
-		progress = nbt.getInt("progress");
+		if (nbt.contains("progress"))
+			progress = nbt.getInt("progress");
 		inventory.deserializeNBT(nbt.getCompound("inventory"));
 	}
 
@@ -99,7 +100,8 @@ public class CinderPlinthBlockEntity extends BlockEntity implements ISoundContro
 	@Override
 	public CompoundTag getUpdateTag() {
 		CompoundTag nbt = super.getUpdateTag();
-		saveAdditional(nbt);
+		capability.writeToNBT(nbt);
+		nbt.put("inventory", inventory.serializeNBT());
 		return nbt;
 	}
 

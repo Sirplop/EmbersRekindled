@@ -42,6 +42,8 @@ public abstract class ItemPipeBlockEntityBase extends PipeBlockEntityBase implem
 	public ItemStackHandler inventory;
 	public LazyOptional<IItemHandler> holder = LazyOptional.of(() -> inventory);
 	Direction lastTransfer;
+	boolean syncCloggedFlag = true;
+	boolean syncTransfer = true;
 	int ticksExisted;
 	int lastRobin;
 
@@ -96,11 +98,6 @@ public abstract class ItemPipeBlockEntityBase extends PipeBlockEntityBase implem
 		return false;
 	}
 
-	@Override
-	public Packet<ClientGamePacketListener> getUpdatePacket() {
-		return ClientboundBlockEntityDataPacket.create(this);
-	}
-
 	public static void serverTick(Level level, BlockPos pos, BlockState state, ItemPipeBlockEntityBase blockEntity) {
 		if (!blockEntity.loaded)
 			blockEntity.initConnections();
@@ -133,20 +130,21 @@ public abstract class ItemPipeBlockEntityBase extends PipeBlockEntityBase implem
 
 			for (int key : possibleDirections.keySet()) {
 				ArrayList<Direction> list = possibleDirections.get(key);
-				for(int i = 0; i < list.size(); i++) {
+				for (int i = 0; i < list.size(); i++) {
 					Direction facing = list.get((i+blockEntity.lastRobin) % list.size());
 					IItemHandler handler = itemHandlers[facing.get3DDataValue()];
 					itemsMoved = blockEntity.pushStack(passStack, facing, handler);
 					if(blockEntity.lastTransfer != facing) {
 						blockEntity.lastTransfer = facing;
+						blockEntity.syncTransfer = true;
 						blockEntity.setChanged();
 					}
-					if(itemsMoved) {
+					if (itemsMoved) {
 						blockEntity.lastRobin++;
 						break;
 					}
 				}
-				if(itemsMoved)
+				if (itemsMoved)
 					break;
 			}
 		}
@@ -154,6 +152,7 @@ public abstract class ItemPipeBlockEntityBase extends PipeBlockEntityBase implem
 		if (blockEntity.inventory.getStackInSlot(0).isEmpty()) {
 			if(blockEntity.lastTransfer != null && !itemsMoved) {
 				blockEntity.lastTransfer = null;
+				blockEntity.syncTransfer = true;
 				blockEntity.setChanged();
 			}
 			itemsMoved = true;
@@ -161,6 +160,7 @@ public abstract class ItemPipeBlockEntityBase extends PipeBlockEntityBase implem
 		}
 		if (blockEntity.clogged == itemsMoved) {
 			blockEntity.clogged = !itemsMoved;
+			blockEntity.syncCloggedFlag = true;
 			blockEntity.setChanged();
 		}
 	}
@@ -177,7 +177,7 @@ public abstract class ItemPipeBlockEntityBase extends PipeBlockEntityBase implem
 			float r = blockEntity.clogged ? 255f : 16f;
 			float g = blockEntity.clogged ? 16f : 255f;
 			float b = 16f;
-			for(int i = 0; i < 3; i++) {
+			for (int i = 0; i < 3; i++) {
 				level.addParticle(new GlowParticleOptions(new Vector3f(r / 255.0F, g / 255.0F, b / 255.0F), new Vec3(vx, vy, vz), 2.0f), x, y, z, vx, vy, vz);
 			}
 		}
@@ -204,6 +204,15 @@ public abstract class ItemPipeBlockEntityBase extends PipeBlockEntityBase implem
 		return false;
 	}
 
+	protected void resetSync() {
+		syncCloggedFlag = false;
+		syncTransfer = false;
+	}
+
+	protected boolean requiresSync() {
+		return syncCloggedFlag || syncTransfer;
+	}
+
 	@Override
 	public void load(CompoundTag nbt) {
 		super.load(nbt);
@@ -213,9 +222,9 @@ public abstract class ItemPipeBlockEntityBase extends PipeBlockEntityBase implem
 			inventory.deserializeNBT(nbt.getCompound("inventory"));
 		if (nbt.contains("lastTransfer"))
 			lastTransfer = Misc.readNullableFacing(nbt.getInt("lastTransfer"));
-		for(Direction facing : Direction.values())
-			if(nbt.contains("from"+facing.get3DDataValue()))
-				from[facing.get3DDataValue()] = nbt.getBoolean("from"+facing.get3DDataValue());
+		for (Direction facing : Direction.values())
+			if(nbt.contains("from" + facing.get3DDataValue()))
+				from[facing.get3DDataValue()] = nbt.getBoolean("from" + facing.get3DDataValue());
 		if (nbt.contains("lastRobin"))
 			lastRobin = nbt.getInt("lastRobin");
 	}
@@ -227,17 +236,28 @@ public abstract class ItemPipeBlockEntityBase extends PipeBlockEntityBase implem
 		writeCloggedFlag(nbt);
 		writeLastTransfer(nbt);
 		for(Direction facing : Direction.values())
-			nbt.putBoolean("from"+facing.get3DDataValue(),from[facing.get3DDataValue()]);
-		nbt.putInt("lastRobin",lastRobin);
+			nbt.putBoolean("from" + facing.get3DDataValue(),from[facing.get3DDataValue()]);
+		nbt.putInt("lastRobin", lastRobin);
 	}
 
 	@Override
 	public CompoundTag getUpdateTag() {
 		CompoundTag nbt = super.getUpdateTag();
-		writeInventory(nbt);
-		writeCloggedFlag(nbt);
-		writeLastTransfer(nbt);
+		if (syncCloggedFlag)
+			writeCloggedFlag(nbt);
+		if (syncTransfer)
+			writeLastTransfer(nbt);
 		return nbt;
+	}
+
+	@Override
+	public Packet<ClientGamePacketListener> getUpdatePacket() {
+		if (requiresSync()) {
+			Packet<ClientGamePacketListener> packet = ClientboundBlockEntityDataPacket.create(this);
+			resetSync();
+			return packet;
+		}
+		return null;
 	}
 
 	public void writeCloggedFlag(CompoundTag nbt) {

@@ -45,6 +45,8 @@ public abstract class FluidPipeBlockEntityBase extends PipeBlockEntityBase imple
 	public FluidTank tank;
 	public LazyOptional<IFluidHandler> holder = LazyOptional.of(() -> tank);
 	Direction lastTransfer;
+	boolean syncCloggedFlag = true;
+	boolean syncTransfer = true;
 	int ticksExisted;
 	int lastRobin;
 
@@ -94,11 +96,6 @@ public abstract class FluidPipeBlockEntityBase extends PipeBlockEntityBase imple
 		return false;
 	}
 
-	@Override
-	public Packet<ClientGamePacketListener> getUpdatePacket() {
-		return ClientboundBlockEntityDataPacket.create(this);
-	}
-
 	public static void serverTick(Level level, BlockPos pos, BlockState state, FluidPipeBlockEntityBase blockEntity) {
 		if (!blockEntity.loaded)
 			blockEntity.initConnections();
@@ -137,6 +134,7 @@ public abstract class FluidPipeBlockEntityBase extends PipeBlockEntityBase imple
 					fluidMoved = blockEntity.pushStack(passStack, facing, handler);
 					if (blockEntity.lastTransfer != facing) {
 						blockEntity.lastTransfer = facing;
+						blockEntity.syncTransfer = true;
 						blockEntity.setChanged();
 					}
 					if (fluidMoved) {
@@ -154,6 +152,7 @@ public abstract class FluidPipeBlockEntityBase extends PipeBlockEntityBase imple
 		if (blockEntity.tank.getFluidAmount() <= 0) {
 			if (blockEntity.lastTransfer != null && !fluidMoved) {
 				blockEntity.lastTransfer = null;
+				blockEntity.syncTransfer = true;
 				blockEntity.setChanged();
 			}
 			fluidMoved = true;
@@ -161,6 +160,7 @@ public abstract class FluidPipeBlockEntityBase extends PipeBlockEntityBase imple
 		}
 		if (blockEntity.clogged == fluidMoved) {
 			blockEntity.clogged = !fluidMoved;
+			blockEntity.syncCloggedFlag = true;
 			blockEntity.setChanged();
 		}
 	}
@@ -177,7 +177,7 @@ public abstract class FluidPipeBlockEntityBase extends PipeBlockEntityBase imple
 			float r = blockEntity.clogged ? 255f : 16f;
 			float g = blockEntity.clogged ? 16f : 255f;
 			float b = 16f;
-			for(int i = 0; i < 3; i++) {
+			for (int i = 0; i < 3; i++) {
 				level.addParticle(new GlowParticleOptions(new Vector3f(r / 255.0F, g / 255.0F, b / 255.0F), new Vec3(vx, vy, vz), 2.0f), x, y, z, vx, vy, vz);
 			}
 		}
@@ -197,6 +197,15 @@ public abstract class FluidPipeBlockEntityBase extends PipeBlockEntityBase imple
 		return false;
 	}
 
+	protected void resetSync() {
+		syncCloggedFlag = false;
+		syncTransfer = false;
+	}
+
+	protected boolean requiresSync() {
+		return syncCloggedFlag || syncTransfer;
+	}
+
 	@Override
 	public void load(CompoundTag nbt) {
 		super.load(nbt);
@@ -206,9 +215,9 @@ public abstract class FluidPipeBlockEntityBase extends PipeBlockEntityBase imple
 			tank.readFromNBT(nbt.getCompound("tank"));
 		if (nbt.contains("lastTransfer"))
 			lastTransfer = Misc.readNullableFacing(nbt.getInt("lastTransfer"));
-		for(Direction facing : Direction.values())
-			if(nbt.contains("from"+facing.get3DDataValue()))
-				from[facing.get3DDataValue()] = nbt.getBoolean("from"+facing.get3DDataValue());
+		for (Direction facing : Direction.values())
+			if (nbt.contains("from" + facing.get3DDataValue()))
+				from[facing.get3DDataValue()] = nbt.getBoolean("from" + facing.get3DDataValue());
 		if (nbt.contains("lastRobin"))
 			lastRobin = nbt.getInt("lastRobin");
 	}
@@ -219,18 +228,29 @@ public abstract class FluidPipeBlockEntityBase extends PipeBlockEntityBase imple
 		writeTank(nbt);
 		writeCloggedFlag(nbt);
 		writeLastTransfer(nbt);
-		for(Direction facing : Direction.values())
-			nbt.putBoolean("from"+facing.get3DDataValue(),from[facing.get3DDataValue()]);
-		nbt.putInt("lastRobin",lastRobin);
+		for (Direction facing : Direction.values())
+			nbt.putBoolean("from" + facing.get3DDataValue(), from[facing.get3DDataValue()]);
+		nbt.putInt("lastRobin", lastRobin);
 	}
 
 	@Override
 	public CompoundTag getUpdateTag() {
 		CompoundTag nbt = super.getUpdateTag();
-		writeTank(nbt);
-		writeCloggedFlag(nbt);
-		writeLastTransfer(nbt);
+		if (syncCloggedFlag)
+			writeCloggedFlag(nbt);
+		if (syncTransfer)
+			writeLastTransfer(nbt);
 		return nbt;
+	}
+
+	@Override
+	public Packet<ClientGamePacketListener> getUpdatePacket() {
+		if (requiresSync()) {
+			Packet<ClientGamePacketListener> packet = ClientboundBlockEntityDataPacket.create(this);
+			resetSync();
+			return packet;
+		}
+		return null;
 	}
 
 	public void writeCloggedFlag(CompoundTag nbt) {

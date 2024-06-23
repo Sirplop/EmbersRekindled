@@ -28,9 +28,6 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.FluidTags;
@@ -99,18 +96,6 @@ public class PressureRefineryBottomBlockEntity extends FluidHandlerBlockEntity i
 		super.saveAdditional(nbt);
 		nbt.put("inventory", inventory.serializeNBT());
 		nbt.putInt("progress", progress);
-	}
-
-	@Override
-	public CompoundTag getUpdateTag() {
-		CompoundTag nbt = super.getUpdateTag();
-		saveAdditional(nbt);
-		return nbt;
-	}
-
-	@Override
-	public Packet<ClientGamePacketListener> getUpdatePacket() {
-		return ClientboundBlockEntityDataPacket.create(this);
 	}
 
 	public double getMultiplier() {

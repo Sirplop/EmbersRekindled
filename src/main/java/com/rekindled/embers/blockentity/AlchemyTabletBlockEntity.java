@@ -118,7 +118,8 @@ public class AlchemyTabletBlockEntity extends BlockEntity implements ISparkable,
 	@Override
 	public void load(CompoundTag nbt) {
 		super.load(nbt);
-		outputMode = nbt.getBoolean("outputMode");
+		if (nbt.contains("outputMode"))
+			outputMode = nbt.getBoolean("outputMode");
 		progress = nbt.getInt("progress");
 		inventory.deserializeNBT(nbt.getCompound("inventory"));
 	}
@@ -134,7 +135,8 @@ public class AlchemyTabletBlockEntity extends BlockEntity implements ISparkable,
 	@Override
 	public CompoundTag getUpdateTag() {
 		CompoundTag nbt = super.getUpdateTag();
-		saveAdditional(nbt);
+		nbt.putInt("progress", progress);
+		nbt.put("inventory", inventory.serializeNBT());
 		return nbt;
 	}
 

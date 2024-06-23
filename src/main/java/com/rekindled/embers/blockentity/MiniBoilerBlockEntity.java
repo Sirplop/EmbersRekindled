@@ -129,7 +129,10 @@ public class MiniBoilerBlockEntity extends PipeBlockEntityBase implements ISound
 	@Override
 	public CompoundTag getUpdateTag() {
 		CompoundTag nbt = super.getUpdateTag();
-		saveAdditional(nbt);
+		nbt.put("fluidTank", fluidTank.writeToNBT(new CompoundTag()));
+		nbt.put("gasTank", gasTank.writeToNBT(new CompoundTag()));
+		nbt.putInt("lastBoil", lastBoil);
+		nbt.putInt("boilTime", boilTime);
 		return nbt;
 	}
 

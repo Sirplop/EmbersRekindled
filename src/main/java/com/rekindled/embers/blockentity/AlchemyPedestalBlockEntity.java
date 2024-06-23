@@ -68,7 +68,7 @@ public class AlchemyPedestalBlockEntity extends BlockEntity implements IExtraCap
 	@Override
 	public CompoundTag getUpdateTag() {
 		CompoundTag nbt = super.getUpdateTag();
-		saveAdditional(nbt);
+		nbt.put("inventory", inventory.serializeNBT());
 		return nbt;
 	}
 

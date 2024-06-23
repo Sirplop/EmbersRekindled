@@ -101,7 +101,11 @@ public class MixerCentrifugeBottomBlockEntity extends BlockEntity implements IMe
 	@Override
 	public CompoundTag getUpdateTag() {
 		CompoundTag nbt = super.getUpdateTag();
-		saveAdditional(nbt);
+		nbt.put("northTank", north.writeToNBT(new CompoundTag()));
+		nbt.put("southTank", south.writeToNBT(new CompoundTag()));
+		nbt.put("eastTank", east.writeToNBT(new CompoundTag()));
+		nbt.put("westTank", west.writeToNBT(new CompoundTag()));
+		nbt.putBoolean("working", isWorking);
 		return nbt;
 	}
 

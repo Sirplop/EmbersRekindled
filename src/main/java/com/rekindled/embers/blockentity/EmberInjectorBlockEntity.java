@@ -82,7 +82,8 @@ public class EmberInjectorBlockEntity extends BlockEntity implements ISoundContr
 	@Override
 	public CompoundTag getUpdateTag() {
 		CompoundTag nbt = super.getUpdateTag();
-		saveAdditional(nbt);
+		nbt.putBoolean("isWorking", isWorking);
+		nbt.putInt("distance", distance);
 		return nbt;
 	}
 

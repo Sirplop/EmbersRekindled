@@ -33,6 +33,7 @@ public class ItemTransferBlockEntity extends ItemPipeBlockEntityBase {
 	public static final int PRIORITY_TRANSFER = -10;
 	public ItemStack filterItem = ItemStack.EMPTY;
 	Random random = new Random();
+	public boolean syncFilter = true;
 	IItemHandler outputSide;
 	public LazyOptional<IItemHandler> outputHolder = LazyOptional.of(() -> outputSide);
 
@@ -86,6 +87,17 @@ public class ItemTransferBlockEntity extends ItemPipeBlockEntityBase {
 	}
 
 	@Override
+	protected boolean requiresSync() {
+		return syncFilter || super.requiresSync();
+	}
+
+	@Override
+	protected void resetSync() {
+		super.resetSync();
+		syncFilter = false;
+	}
+
+	@Override
 	public void saveAdditional(CompoundTag nbt) {
 		super.saveAdditional(nbt);
 		writeFilter(nbt);
@@ -94,7 +106,8 @@ public class ItemTransferBlockEntity extends ItemPipeBlockEntityBase {
 	@Override
 	public CompoundTag getUpdateTag() {
 		CompoundTag nbt = super.getUpdateTag();
-		writeFilter(nbt);
+		if (syncFilter)
+			writeFilter(nbt);
 		return nbt;
 	}
 
@@ -104,7 +117,7 @@ public class ItemTransferBlockEntity extends ItemPipeBlockEntityBase {
 
 	public void setupFilter() {
 		Item item = this.filterItem.getItem();
-		if(item instanceof IFilterItem)
+		if (item instanceof IFilterItem)
 			filter = ((IFilterItem) item).getFilter(this.filterItem);
 		else if(!this.filterItem.isEmpty())
 			filter = new FilterItem(this.filterItem);

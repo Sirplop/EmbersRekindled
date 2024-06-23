@@ -99,6 +99,11 @@ public class EntropicEnumeratorBlockEntity extends BlockEntity implements IExtra
 	@Override
 	public void saveAdditional(CompoundTag nbt) {
 		super.saveAdditional(nbt);
+		save(nbt);
+	}
+
+	public void save(CompoundTag nbt) {
+		super.saveAdditional(nbt);
 		for (int x = 0; x < 2; x++) {
 			for (int y = 0; y < 2; y++) {
 				for (int z = 0; z < 2; z++) {
@@ -127,7 +132,7 @@ public class EntropicEnumeratorBlockEntity extends BlockEntity implements IExtra
 	@Override
 	public CompoundTag getUpdateTag() {
 		CompoundTag nbt = super.getUpdateTag();
-		saveAdditional(nbt);
+		save(nbt);
 		return nbt;
 	}
 

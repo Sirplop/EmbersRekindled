@@ -103,9 +103,11 @@ public class IgnemReactorBlockEntity extends BlockEntity implements ISoundContro
 	@Override
 	public void load(CompoundTag nbt) {
 		super.load(nbt);
-		inventory.deserializeNBT(nbt.getCompound("inventory"));
+		if (nbt.contains("inventory"))
+			inventory.deserializeNBT(nbt.getCompound("inventory"));
 		capability.deserializeNBT(nbt);
-		progress = nbt.getInt("progress");
+		if (nbt.contains("progress"))
+			progress = nbt.getInt("progress");
 		catalyzerMult = nbt.getDouble("catalyzer");
 		combustorMult = nbt.getDouble("combustor");
 	}
@@ -123,7 +125,9 @@ public class IgnemReactorBlockEntity extends BlockEntity implements ISoundContro
 	@Override
 	public CompoundTag getUpdateTag() {
 		CompoundTag nbt = super.getUpdateTag();
-		saveAdditional(nbt);
+		capability.writeToNBT(nbt);
+		nbt.putDouble("catalyzer", catalyzerMult);
+		nbt.putDouble("combustor", combustorMult);
 		return nbt;
 	}
 

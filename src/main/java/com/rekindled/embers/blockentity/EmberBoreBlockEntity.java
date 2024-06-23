@@ -89,8 +89,10 @@ public class EmberBoreBlockEntity extends BlockEntity implements ISoundControlle
 	@Override
 	public void load(CompoundTag nbt) {
 		super.load(nbt);
-		inventory.deserializeNBT(nbt.getCompound("inventory"));
-		ticksFueled = nbt.getDouble("fueled");
+		if (nbt.contains("inventory"))
+			inventory.deserializeNBT(nbt.getCompound("inventory"));
+		if (nbt.contains("fueled"))
+			ticksFueled = nbt.getDouble("fueled");
 		isRunning = nbt.getBoolean("isRunning");
 	}
 
@@ -105,7 +107,7 @@ public class EmberBoreBlockEntity extends BlockEntity implements ISoundControlle
 	@Override
 	public CompoundTag getUpdateTag() {
 		CompoundTag nbt = super.getUpdateTag();
-		saveAdditional(nbt);
+		nbt.putBoolean("isRunning", isRunning);
 		return nbt;
 	}
 

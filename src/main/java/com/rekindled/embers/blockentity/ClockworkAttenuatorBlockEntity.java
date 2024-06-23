@@ -46,7 +46,8 @@ public class ClockworkAttenuatorBlockEntity extends BlockEntity {
 	@Override
 	public CompoundTag getUpdateTag() {
 		CompoundTag nbt = super.getUpdateTag();
-		saveAdditional(nbt);
+		nbt.putDouble("active_speed", activeSpeed);
+		nbt.putDouble("inactive_speed", inactiveSpeed);
 		return nbt;
 	}
 

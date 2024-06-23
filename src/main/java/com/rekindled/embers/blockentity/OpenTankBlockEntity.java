@@ -4,6 +4,9 @@ import org.jetbrains.annotations.NotNull;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fluids.FluidStack;
@@ -31,10 +34,26 @@ public abstract class OpenTankBlockEntity extends FluidHandlerBlockEntity {
 	@Override
 	public void saveAdditional(CompoundTag nbt) {
 		super.saveAdditional(nbt);
-		if(lastEscaped != null) {
+		if (lastEscaped != null) {
 			nbt.put("lastEscaped", lastEscaped.writeToNBT(new CompoundTag()));
 			nbt.putLong("lastEscapedTick", lastEscapedTickServer);
 		}
+	}
+
+	@Override
+	public CompoundTag getUpdateTag() {
+		CompoundTag nbt = super.getUpdateTag();
+		tank.writeToNBT(nbt);
+		if (lastEscaped != null) {
+			nbt.put("lastEscaped", lastEscaped.writeToNBT(new CompoundTag()));
+			nbt.putLong("lastEscapedTick", lastEscapedTickServer);
+		}
+		return nbt;
+	}
+
+	@Override
+	public Packet<ClientGamePacketListener> getUpdatePacket() {
+		return ClientboundBlockEntityDataPacket.create(this);
 	}
 
 	public void setEscapedFluid(FluidStack stack) {

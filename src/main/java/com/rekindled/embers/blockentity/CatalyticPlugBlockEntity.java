@@ -88,7 +88,9 @@ public class CatalyticPlugBlockEntity extends BlockEntity implements ISoundContr
 	@Override
 	public CompoundTag getUpdateTag() {
 		CompoundTag nbt = super.getUpdateTag();
-		saveAdditional(nbt);
+		nbt.put("tank", tank.writeToNBT(new CompoundTag()));
+		nbt.putInt("active", activeTicks);
+		nbt.putInt("burnTime", burnTime);
 		return nbt;
 	}
 

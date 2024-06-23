@@ -95,7 +95,8 @@ public class CopperChargerBlockEntity extends BlockEntity implements ISoundContr
 	public void load(CompoundTag nbt) {
 		super.load(nbt);
 		capability.deserializeNBT(nbt);
-		inventory.deserializeNBT(nbt.getCompound("inventory"));
+		if (nbt.contains("inventory"))
+			inventory.deserializeNBT(nbt.getCompound("inventory"));
 		isWorking = nbt.getBoolean("working");
 		reverse = nbt.getBoolean("reverse");
 	}
@@ -110,7 +111,8 @@ public class CopperChargerBlockEntity extends BlockEntity implements ISoundContr
 	@Override
 	public CompoundTag getUpdateTag() {
 		CompoundTag nbt = super.getUpdateTag();
-		saveAdditional(nbt);
+		capability.writeToNBT(nbt);
+		nbt.put("inventory", inventory.serializeNBT());
 		nbt.putBoolean("working", isWorking);
 		nbt.putBoolean("reverse", reverse);
 		return nbt;

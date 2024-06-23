@@ -109,7 +109,8 @@ public class StamperBlockEntity extends BlockEntity implements IMechanicallyPowe
 	@Override
 	public CompoundTag getUpdateTag() {
 		CompoundTag nbt = super.getUpdateTag();
-		saveAdditional(nbt);
+		nbt.putBoolean("powered", powered);
+		nbt.put("stamp", stamp.serializeNBT());
 		return nbt;
 	}
 

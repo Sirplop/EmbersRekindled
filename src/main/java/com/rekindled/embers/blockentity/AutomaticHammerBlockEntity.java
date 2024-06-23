@@ -75,7 +75,8 @@ public class AutomaticHammerBlockEntity extends BlockEntity implements IMechanic
 	@Override
 	public CompoundTag getUpdateTag() {
 		CompoundTag nbt = super.getUpdateTag();
-		saveAdditional(nbt);
+		nbt.putLong("startTime", startTime);
+		nbt.putInt("processTime", processTime);
 		return nbt;
 	}
 

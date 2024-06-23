@@ -102,8 +102,10 @@ public class HearthCoilBlockEntity extends BlockEntity implements ISoundControll
 	public void load(CompoundTag nbt) {
 		super.load(nbt);
 		capability.deserializeNBT(nbt);
-		inventory.deserializeNBT(nbt.getCompound("inventory"));
-		progress = nbt.getInt("progress");
+		if (nbt.contains("inventory"))
+			inventory.deserializeNBT(nbt.getCompound("inventory"));
+		if (nbt.contains("progress"))
+			progress = nbt.getInt("progress");
 		heat = nbt.getDouble("heat");
 	}
 
@@ -119,7 +121,7 @@ public class HearthCoilBlockEntity extends BlockEntity implements ISoundControll
 	@Override
 	public CompoundTag getUpdateTag() {
 		CompoundTag nbt = super.getUpdateTag();
-		saveAdditional(nbt);
+		nbt.putDouble("heat", heat);
 		return nbt;
 	}
 

@@ -37,7 +37,8 @@ public class InfernoForgeTopBlockEntity extends BlockEntity {
 	@Override
 	public CompoundTag getUpdateTag() {
 		CompoundTag nbt = super.getUpdateTag();
-		saveAdditional(nbt);
+		nbt.putLong("lastToggle", lastToggle);
+		nbt.putBoolean("open", open);
 		return nbt;
 	}
 

@@ -13,9 +13,6 @@ import com.rekindled.embers.particle.StarParticleOptions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -47,18 +44,6 @@ public class EmberRelayBlockEntity extends BlockEntity implements IEmberPacketPr
 			nbt.putInt("targetY", target.getY());
 			nbt.putInt("targetZ", target.getZ());
 		}
-	}
-
-	@Override
-	public CompoundTag getUpdateTag() {
-		CompoundTag nbt = super.getUpdateTag();
-		saveAdditional(nbt);
-		return nbt;
-	}
-
-	@Override
-	public Packet<ClientGamePacketListener> getUpdatePacket() {
-		return ClientboundBlockEntityDataPacket.create(this);
 	}
 
 	@Override

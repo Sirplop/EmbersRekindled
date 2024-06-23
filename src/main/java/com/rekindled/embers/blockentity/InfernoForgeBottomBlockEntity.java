@@ -61,7 +61,6 @@ public class InfernoForgeBottomBlockEntity extends BlockEntity implements IExtra
 	};
 	static Random random = new Random();
 	public int progress = 0;
-	public int heat = 0;
 	public double emberValue = 0;
 	public IEmberActivationRecipe cachedEmberRecipe = null;
 
@@ -81,7 +80,6 @@ public class InfernoForgeBottomBlockEntity extends BlockEntity implements IExtra
 		super.load(nbt);
 		capability.deserializeNBT(nbt);
 		progress = nbt.getInt("progress");
-		heat = nbt.getInt("heat");
 	}
 
 	@Override
@@ -89,13 +87,13 @@ public class InfernoForgeBottomBlockEntity extends BlockEntity implements IExtra
 		super.saveAdditional(nbt);
 		capability.writeToNBT(nbt);
 		nbt.putInt("progress", progress);
-		nbt.putInt("heat", heat);
 	}
 
 	@Override
 	public CompoundTag getUpdateTag() {
 		CompoundTag nbt = super.getUpdateTag();
-		saveAdditional(nbt);
+		capability.writeToNBT(nbt);
+		nbt.putInt("progress", progress);
 		return nbt;
 	}
 

@@ -21,9 +21,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -85,18 +82,6 @@ public class BeamCannonBlockEntity extends BlockEntity {
 		super.saveAdditional(nbt);
 		nbt.putBoolean("lastPowered", lastPowered);
 		capability.writeToNBT(nbt);
-	}
-
-	@Override
-	public CompoundTag getUpdateTag() {
-		CompoundTag nbt = super.getUpdateTag();
-		saveAdditional(nbt);
-		return nbt;
-	}
-
-	@Override
-	public Packet<ClientGamePacketListener> getUpdatePacket() {
-		return ClientboundBlockEntityDataPacket.create(this);
 	}
 
 	public static void serverTick(Level level, BlockPos pos, BlockState state, BeamCannonBlockEntity blockEntity) {

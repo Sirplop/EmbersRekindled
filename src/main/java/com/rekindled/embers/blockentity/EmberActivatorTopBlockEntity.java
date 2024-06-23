@@ -64,7 +64,7 @@ public class EmberActivatorTopBlockEntity extends BlockEntity implements ISoundC
 	@Override
 	public CompoundTag getUpdateTag() {
 		CompoundTag nbt = super.getUpdateTag();
-		saveAdditional(nbt);
+		capability.writeToNBT(nbt);
 		return nbt;
 	}
 

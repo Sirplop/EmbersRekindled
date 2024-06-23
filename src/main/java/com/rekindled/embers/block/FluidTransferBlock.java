@@ -90,6 +90,7 @@ public class FluidTransferBlock extends BaseEntityBlock implements SimpleWaterlo
 				transfer.filterFluid = FluidStack.EMPTY;
 				level.setBlock(pos, state.setValue(FILTER, false), 10);
 			}
+			transfer.syncFilter = true;
 			transfer.setChanged();
 			return InteractionResult.SUCCESS;
 		}

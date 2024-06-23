@@ -39,7 +39,6 @@ public class PressureRefineryTopBlockEntity extends BlockEntity implements ISoun
 		}
 	};
 	static Random random = new Random();
-	int progress = -1;
 
 	public static final int SOUND_HAS_EMBER = 1;
 	public static final int[] SOUND_IDS = new int[]{SOUND_HAS_EMBER};
@@ -55,20 +54,18 @@ public class PressureRefineryTopBlockEntity extends BlockEntity implements ISoun
 	public void load(CompoundTag nbt) {
 		super.load(nbt);
 		capability.deserializeNBT(nbt);
-		progress = nbt.getInt("progress");
 	}
 
 	@Override
 	public void saveAdditional(CompoundTag nbt) {
 		super.saveAdditional(nbt);
 		capability.writeToNBT(nbt);
-		nbt.putInt("progress", progress);
 	}
 
 	@Override
 	public CompoundTag getUpdateTag() {
 		CompoundTag nbt = super.getUpdateTag();
-		saveAdditional(nbt);
+		capability.writeToNBT(nbt);
 		return nbt;
 	}
 

@@ -65,7 +65,8 @@ public class MechanicalPumpBottomBlockEntity extends BlockEntity implements IMec
 	public void load(CompoundTag nbt) {
 		super.load(nbt);
 		capability.deserializeNBT(nbt);
-		progress = nbt.getInt("progress");
+		if (nbt.contains("progress"))
+			progress = nbt.getInt("progress");
 		totalProgress = nbt.getInt("totalProgress");
 	}
 
@@ -80,7 +81,7 @@ public class MechanicalPumpBottomBlockEntity extends BlockEntity implements IMec
 	@Override
 	public CompoundTag getUpdateTag() {
 		CompoundTag nbt = super.getUpdateTag();
-		saveAdditional(nbt);
+		nbt.putInt("totalProgress", totalProgress);
 		return nbt;
 	}
 

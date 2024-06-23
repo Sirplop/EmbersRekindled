@@ -78,7 +78,8 @@ public class DawnstoneAnvilBlockEntity extends BlockEntity implements IHammerabl
 	@Override
 	public CompoundTag getUpdateTag() {
 		CompoundTag nbt = super.getUpdateTag();
-		saveAdditional(nbt);
+		nbt.putInt("progress", progress);
+		nbt.put("inventory", inventory.serializeNBT());
 		return nbt;
 	}
 

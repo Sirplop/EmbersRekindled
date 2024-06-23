@@ -197,7 +197,7 @@ public class ItemExtractorBlockEntity extends ItemPipeBlockEntityBase implements
 	@Override
 	public void order(BlockEntity source, IFilter filter, int orderSize) {
 		OrderStack order = getOrder(source);
-		if(order == null)
+		if (order == null)
 			orders.add(new OrderStack(source.getBlockPos(), filter, orderSize));
 		else if(Objects.equals(order.getFilter(), filter))
 			order.increment(orderSize);
@@ -213,7 +213,7 @@ public class ItemExtractorBlockEntity extends ItemPipeBlockEntityBase implements
 
 	public OrderStack getOrder(BlockEntity source) {
 		for (OrderStack order : orders) {
-			if(order.getPos().equals(source.getBlockPos()))
+			if (order.getPos().equals(source.getBlockPos()))
 				return order;
 		}
 		return null;

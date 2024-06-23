@@ -120,7 +120,9 @@ public class CrystalSeedBlockEntity extends BlockEntity implements IEmberInjecta
 	@Override
 	public CompoundTag getUpdateTag() {
 		CompoundTag nbt = super.getUpdateTag();
-		saveAdditional(nbt);
+		nbt.putString("spawns", getSpawnString(willSpawn));
+		nbt.putInt("size", size);
+		nbt.putInt("xp", xp);
 		return nbt;
 	}
 
@@ -149,8 +151,8 @@ public class CrystalSeedBlockEntity extends BlockEntity implements IEmberInjecta
 					level.playSound(null, pos.getX()+0.5+offX, pos.getY()+0.5f, pos.getZ()+0.5+offZ, EmbersSounds.METAL_SEED_PING.get(), SoundSource.BLOCKS, 1.0f, 1.0f);
 				}
 			}
-			blockEntity.setChanged();
 			blockEntity.willSpawn = getSpawns(blockEntity.xp);
+			blockEntity.setChanged();
 		}
 	}
 

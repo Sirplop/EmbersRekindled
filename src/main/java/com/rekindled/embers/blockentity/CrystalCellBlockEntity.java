@@ -101,7 +101,8 @@ public class CrystalCellBlockEntity extends BlockEntity implements ISoundControl
 	public void load(CompoundTag nbt) {
 		super.load(nbt);
 		seed = nbt.getLong("seed");
-		inventory.deserializeNBT(nbt.getCompound("inventory"));
+		if (nbt.contains("inventory"))
+			inventory.deserializeNBT(nbt.getCompound("inventory"));
 		capability.deserializeNBT(nbt);
 	}
 
@@ -116,7 +117,8 @@ public class CrystalCellBlockEntity extends BlockEntity implements ISoundControl
 	@Override
 	public CompoundTag getUpdateTag() {
 		CompoundTag nbt = super.getUpdateTag();
-		saveAdditional(nbt);
+		nbt.putLong("seed", seed);
+		capability.writeToNBT(nbt);
 		return nbt;
 	}
 

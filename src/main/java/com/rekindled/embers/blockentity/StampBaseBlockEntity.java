@@ -82,7 +82,7 @@ public class StampBaseBlockEntity extends OpenTankBlockEntity implements IExtraC
 	@Override
 	public CompoundTag getUpdateTag() {
 		CompoundTag nbt = super.getUpdateTag();
-		saveAdditional(nbt);
+		nbt.put("inventory", inventory.serializeNBT());
 		return nbt;
 	}
 

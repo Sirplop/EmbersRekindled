@@ -4,8 +4,6 @@ import java.util.function.Supplier;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -37,14 +35,15 @@ public class MessageTEUpdateRequest {
 				if (player != null && player.level() != null) {
 					BlockEntity blockEntity = player.level().getBlockEntity(BlockPos.of(msg.pos));
 					if (blockEntity != null) {
+						/*
 						Packet<ClientGamePacketListener> packet = blockEntity.getUpdatePacket();
 						if (packet != null) {
 							player.connection.send(packet);
 						} else {
-							//just force it lmao
-							packet = ClientboundBlockEntityDataPacket.create(blockEntity, (BE) -> BE.saveWithoutMetadata());
-							player.connection.send(packet);
-						}
+						//just force it lmao
+						packet = ClientboundBlockEntityDataPacket.create(blockEntity, (BE) -> BE.saveWithoutMetadata());*/
+						player.connection.send(ClientboundBlockEntityDataPacket.create(blockEntity, (BE) -> BE.saveWithoutMetadata()));
+						//}
 					}
 				}
 			});

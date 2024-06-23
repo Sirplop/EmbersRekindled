@@ -16,6 +16,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -47,8 +48,10 @@ public class CombustionChamberBlockEntity extends BlockEntity implements IExtraC
 	@Override
 	public void load(CompoundTag nbt) {
 		super.load(nbt);
-		inventory.deserializeNBT(nbt.getCompound("inventory"));
-		progress = nbt.getInt("progress");
+		if (nbt.contains("inventory"))
+			inventory.deserializeNBT(nbt.getCompound("inventory"));
+		if (nbt.contains("progress"))
+			progress = nbt.getInt("progress");
 		multiplier = nbt.getDouble("multiplier");
 	}
 
@@ -63,7 +66,7 @@ public class CombustionChamberBlockEntity extends BlockEntity implements IExtraC
 	@Override
 	public CompoundTag getUpdateTag() {
 		CompoundTag nbt = super.getUpdateTag();
-		saveAdditional(nbt);
+		nbt.putDouble("multiplier", multiplier);
 		return nbt;
 	}
 
@@ -77,6 +80,7 @@ public class CombustionChamberBlockEntity extends BlockEntity implements IExtraC
 			blockEntity.progress --;
 			if (blockEntity.progress == 0) {
 				blockEntity.multiplier = 0;
+				((ServerLevel) level).getChunkSource().blockChanged(pos);
 			}
 			blockEntity.setChanged();
 		}
@@ -89,6 +93,7 @@ public class CombustionChamberBlockEntity extends BlockEntity implements IExtraC
 
 				//the recipe is responsible for taking items from the inventory
 				blockEntity.cachedRecipe.process(wrapper);
+				((ServerLevel) level).getChunkSource().blockChanged(pos);
 			}
 		}
 	}

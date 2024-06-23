@@ -69,7 +69,7 @@ public class MixerCentrifugeTopBlockEntity extends FluidHandlerBlockEntity imple
 	@Override
 	public CompoundTag getUpdateTag() {
 		CompoundTag nbt = super.getUpdateTag();
-		saveAdditional(nbt);
+        tank.writeToNBT(nbt);
 		return nbt;
 	}
 
