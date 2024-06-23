@@ -3,6 +3,8 @@ package com.rekindled.embers.block;
 import java.util.ArrayList;
 
 import com.rekindled.embers.Embers;
+import com.rekindled.embers.RegistryManager;
+import com.rekindled.embers.blockentity.FluidDialBlockEntity;
 import com.rekindled.embers.datagen.EmbersFluidTags;
 import com.rekindled.embers.util.FluidAmounts;
 
@@ -53,14 +55,19 @@ public class FluidDialBlock extends DialBaseBlock {
 
 	@Override
 	protected void getBEData(Direction facing, ArrayList<String> text, BlockEntity blockEntity, int maxLines) {
-		IFluidHandler cap = blockEntity.getCapability(ForgeCapabilities.FLUID_HANDLER, facing).orElse(blockEntity.getCapability(ForgeCapabilities.FLUID_HANDLER, null).orElse(null));
-		if (cap != null) {
-			for (int i = 0; i < cap.getTanks(); i++) {
-				FluidStack contents = cap.getFluidInTank(i);
-				int capacity = cap.getTankCapacity(i);
-				text.add(formatFluidStack(contents, capacity));
-				if (contents.getFluid().is(EmbersFluidTags.INGOT_TOOLTIP) && contents.getAmount() >= FluidAmounts.NUGGET_AMOUNT)
-					text.add(FluidAmounts.getIngotTooltip(contents.getAmount()));
+		if (blockEntity instanceof FluidDialBlockEntity dial && dial.display) {
+			int extraLines = 0;
+			for (int i = 0; i < dial.fluids.length && (i + extraLines) < maxLines; i++) {
+				FluidStack contents = dial.fluids[i];
+				text.add(formatFluidStack(contents, dial.capacities[i]));
+				if (contents.getFluid().is(EmbersFluidTags.INGOT_TOOLTIP) && contents.getAmount() >= FluidAmounts.NUGGET_AMOUNT) {
+					if ((i + extraLines + 1) < maxLines)
+						text.add(FluidAmounts.getIngotTooltip(contents.getAmount()));
+					extraLines++;
+				}
+			}
+			if ((dial.fluids.length + dial.extraLines + extraLines) > Math.min(maxLines, dial.fluids.length + extraLines)) {
+				text.add(I18n.get(Embers.MODID + ".tooltip.too_many", dial.fluids.length + extraLines - Math.min(maxLines, dial.fluids.length + extraLines) + dial.extraLines));
 			}
 		}
 	}
@@ -71,6 +78,11 @@ public class FluidDialBlock extends DialBaseBlock {
 			return I18n.get(Embers.MODID + ".tooltip.fluiddial.fluid", contents.getDisplayName().getString(), contents.getAmount(), capacity);
 		else
 			return I18n.get(Embers.MODID + ".tooltip.fluiddial.nofluid", capacity);
+	}
+
+	@Override
+	public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
+		return RegistryManager.FLUID_DIAL_ENTITY.get().create(pPos, pState);
 	}
 
 	@Override

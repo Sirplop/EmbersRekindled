@@ -9,7 +9,7 @@ import com.rekindled.embers.network.message.MessageItemSound;
 import com.rekindled.embers.network.message.MessageResearchData;
 import com.rekindled.embers.network.message.MessageResearchTick;
 import com.rekindled.embers.network.message.MessageScalesData;
-import com.rekindled.embers.network.message.MessageTEUpdateRequest;
+import com.rekindled.embers.network.message.MessageDialUpdateRequest;
 import com.rekindled.embers.network.message.MessageWorldSeed;
 
 import net.minecraft.resources.ResourceLocation;
@@ -29,7 +29,7 @@ public class PacketHandler {
 	static int id = 0;
 
 	public static void init() {
-		INSTANCE.registerMessage(id++, MessageTEUpdateRequest.class, MessageTEUpdateRequest::encode, MessageTEUpdateRequest::decode, MessageTEUpdateRequest::handle);
+		INSTANCE.registerMessage(id++, MessageDialUpdateRequest.class, MessageDialUpdateRequest::encode, MessageDialUpdateRequest::decode, MessageDialUpdateRequest::handle);
 		INSTANCE.registerMessage(id++, MessageResearchTick.class, MessageResearchTick::encode, MessageResearchTick::decode, MessageResearchTick::handle);
 		INSTANCE.registerMessage(id++, MessageResearchData.class, MessageResearchData::encode, MessageResearchData::decode, MessageResearchData::handle);
 		INSTANCE.registerMessage(id++, MessageWorldSeed.class, MessageWorldSeed::encode, MessageWorldSeed::decode, MessageWorldSeed::handle);

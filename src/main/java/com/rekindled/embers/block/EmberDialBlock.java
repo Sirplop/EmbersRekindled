@@ -4,8 +4,10 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import com.rekindled.embers.Embers;
+import com.rekindled.embers.RegistryManager;
 import com.rekindled.embers.api.capabilities.EmbersCapabilities;
 import com.rekindled.embers.api.power.IEmberCapability;
+import com.rekindled.embers.blockentity.EmberDialBlockEntity;
 import com.rekindled.embers.util.DecimalFormats;
 
 import net.minecraft.client.resources.language.I18n;
@@ -46,9 +48,8 @@ public class EmberDialBlock extends DialBaseBlock {
 
 	@Override
 	protected void getBEData(Direction facing, ArrayList<String> text, BlockEntity blockEntity, int maxLines) {
-		IEmberCapability cap = blockEntity.getCapability(EmbersCapabilities.EMBER_CAPABILITY, facing).orElse(blockEntity.getCapability(EmbersCapabilities.EMBER_CAPABILITY, null).orElse(null));
-		if (cap != null){
-			text.add(formatEmber(cap.getEmber(), cap.getEmberCapacity()));
+		if (blockEntity instanceof EmberDialBlockEntity dial && dial.display) {
+			text.add(formatEmber(dial.ember, dial.capacity));
 		}
 	}
 
@@ -56,6 +57,11 @@ public class EmberDialBlock extends DialBaseBlock {
 	public static String formatEmber(double ember, double emberCapacity) {
 		DecimalFormat emberFormat = DecimalFormats.getDecimalFormat(Embers.MODID + ".decimal_format.ember");
 		return I18n.get(Embers.MODID + ".tooltip.emberdial.ember", emberFormat.format(ember), emberFormat.format(emberCapacity));
+	}
+
+	@Override
+	public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
+		return RegistryManager.EMBER_DIAL_ENTITY.get().create(pPos, pState);
 	}
 
 	@Override

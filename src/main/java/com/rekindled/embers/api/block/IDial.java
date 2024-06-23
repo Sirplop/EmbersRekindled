@@ -9,7 +9,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public interface IDial {
     List<String> getDisplayInfo(Level world, BlockPos pos, BlockState state, int maxLines);
 
-    void updateBEData(Level world, BlockState state, BlockPos pos);
+    void updateBEData(BlockPos pos, int maxLines);
 
     String getDialType();
 }

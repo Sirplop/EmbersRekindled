@@ -99,7 +99,7 @@ public class EmbersClientEvents {
 						if (result.getType() == BlockHitResult.Type.BLOCK) {
 							BlockState state = world.getBlockState(result.getBlockPos());
 							if (state.getBlock() instanceof IDial) {
-								((IDial) state.getBlock()).updateBEData(world, state, result.getBlockPos());
+								((IDial) state.getBlock()).updateBEData(result.getBlockPos(), Math.max(0, (mc.getWindow().getScreenHeight() / 2 - 100) / 11));
 							}
 						}
 					}
@@ -219,7 +219,7 @@ public class EmbersClientEvents {
 					List<String> text = new ArrayList<String>();
 
 					if (state.getBlock() instanceof IDial) {
-						text.addAll(((IDial) state.getBlock()).getDisplayInfo(world, result.getBlockPos(), state, (height / 2 - 100) / 11));
+						text.addAll(((IDial) state.getBlock()).getDisplayInfo(world, result.getBlockPos(), state, Math.max(0, (height / 2 - 100) / 11)));
 					} else if (state.getBlock() == RegistryManager.ATMOSPHERIC_GAUGE.get()) {
 						renderAtmosphericGauge(gui, graphics, player, partialTicks, width, height);
 					} else if (Misc.isWearingLens(player)) {

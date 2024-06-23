@@ -8,7 +8,7 @@ import javax.annotation.Nullable;
 import com.rekindled.embers.api.block.IDial;
 import com.rekindled.embers.api.tile.IExtraDialInformation;
 import com.rekindled.embers.network.PacketHandler;
-import com.rekindled.embers.network.message.MessageTEUpdateRequest;
+import com.rekindled.embers.network.message.MessageDialUpdateRequest;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -20,6 +20,7 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DirectionalBlock;
+import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
@@ -33,7 +34,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public abstract class DialBaseBlock extends DirectionalBlock implements IDial, SimpleWaterloggedBlock {
+public abstract class DialBaseBlock extends DirectionalBlock implements IDial, EntityBlock, SimpleWaterloggedBlock {
 
 	protected static final VoxelShape UP_AABB = Shapes.box(0.3125,0,0.3125,0.6875,0.125,0.6875);
 	protected static final VoxelShape DOWN_AABB = Shapes.box(0.3125,0.875,0.3125,0.6875,1.0,0.6875);
@@ -128,12 +129,12 @@ public abstract class DialBaseBlock extends DirectionalBlock implements IDial, S
 	@Override
 	public List<String> getDisplayInfo(Level world, BlockPos pos, BlockState state, int maxLines) {
 		ArrayList<String> text = new ArrayList<>();
-		Direction facing = state.getValue(FACING);
-		BlockEntity tileEntity = world.getBlockEntity(pos.relative(facing, -1));
-		if (tileEntity != null){
+		BlockEntity tileEntity = world.getBlockEntity(pos);
+		if (tileEntity != null) {
+			Direction facing = state.getValue(FACING);
 			getBEData(facing, text, tileEntity, maxLines);
-			if(tileEntity instanceof IExtraDialInformation)
-				((IExtraDialInformation) tileEntity).addDialInformation(facing, text, getDialType());
+			if (world.getBlockEntity(pos.relative(facing, -1)) instanceof IExtraDialInformation facingTile)
+				facingTile.addDialInformation(facing, text, getDialType());
 		}
 		return text;
 	}
@@ -141,11 +142,8 @@ public abstract class DialBaseBlock extends DirectionalBlock implements IDial, S
 	protected abstract void getBEData(Direction facing, ArrayList<String> text, BlockEntity blockEntity, int maxLines);
 
 	@Override
-	public void updateBEData(Level world, BlockState state, BlockPos pos) {
-		BlockPos BEPos = pos.relative(state.getValue(FACING), -1);
-		if (world.getBlockEntity(BEPos) != null) {
-			PacketHandler.INSTANCE.sendToServer(new MessageTEUpdateRequest(BEPos));
-		}
+	public void updateBEData(BlockPos pos, int maxLines) {
+		PacketHandler.INSTANCE.sendToServer(new MessageDialUpdateRequest(pos, maxLines));
 	}
 
 	@Override

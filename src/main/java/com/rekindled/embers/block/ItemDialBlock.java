@@ -4,6 +4,8 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import com.rekindled.embers.Embers;
+import com.rekindled.embers.RegistryManager;
+import com.rekindled.embers.blockentity.ItemDialBlockEntity;
 import com.rekindled.embers.util.DecimalFormats;
 
 import net.minecraft.client.resources.language.I18n;
@@ -53,16 +55,12 @@ public class ItemDialBlock extends DialBaseBlock {
 
 	@Override
 	protected void getBEData(Direction facing, ArrayList<String> text, BlockEntity blockEntity, int maxLines) {
-		IItemHandler cap = blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER, facing).orElse(blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER, null).orElse(null));
-		if (cap != null){
-			for (int i = 0; i < cap.getSlots() && i < maxLines; i++) {
-				ItemStack stack = cap.getStackInSlot(i);
-				String item;
-				item = formatItemStack(stack);
-				text.add(I18n.get(Embers.MODID + ".tooltip.itemdial.slot", i, item));
+		if (blockEntity instanceof ItemDialBlockEntity dial && dial.display) {
+			for (int i = 0; i < dial.itemStacks.length && i < maxLines; i++) {
+				text.add(I18n.get(Embers.MODID + ".tooltip.itemdial.slot", i, formatItemStack(dial.itemStacks[i])));
 			}
-			if (cap.getSlots() > maxLines) {
-				text.add(I18n.get(Embers.MODID + ".tooltip.itemdial.too_many", cap.getSlots() - maxLines + 1));
+			if ((dial.itemStacks.length + dial.extraLines) > Math.min(maxLines, dial.itemStacks.length)) {
+				text.add(I18n.get(Embers.MODID + ".tooltip.too_many", dial.itemStacks.length - Math.min(maxLines, dial.itemStacks.length) + dial.extraLines));
 			}
 		}
 	}
@@ -74,6 +72,11 @@ public class ItemDialBlock extends DialBaseBlock {
 			return I18n.get(Embers.MODID + ".tooltip.itemdial.item", stackFormat.format(stack.getCount()), stack.getHoverName().getString());
 		else
 			return I18n.get(Embers.MODID + ".tooltip.itemdial.noitem");
+	}
+
+	@Override
+	public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
+		return RegistryManager.ITEM_DIAL_ENTITY.get().create(pPos, pState);
 	}
 
 	@Override
