@@ -116,7 +116,7 @@ public class MelterBottomBlockEntity extends BlockEntity implements ISoundContro
 		UpgradeUtil.verifyUpgrades(blockEntity, blockEntity.upgrades);
 		if (UpgradeUtil.doTick(blockEntity, blockEntity.upgrades))
 			return;
-		if(top != null && !top.inventory.getStackInSlot(0).isEmpty()) {
+		if (top != null && !top.inventory.getStackInSlot(0).isEmpty()) {
 			double emberCost = UpgradeUtil.getTotalEmberConsumption(blockEntity, ConfigManager.MELTER_EMBER_COST.get(), blockEntity.upgrades);
 			if (blockEntity.capability.getEmber() >= emberCost) {
 				boolean cancel = UpgradeUtil.doWork(blockEntity, blockEntity.upgrades);
@@ -217,7 +217,7 @@ public class MelterBottomBlockEntity extends BlockEntity implements ISoundContro
 	@Override
 	public void setChanged() {
 		super.setChanged();
-		if (!level.isClientSide())
+		if (level instanceof ServerLevel)
 			((ServerLevel) level).getChunkSource().blockChanged(worldPosition);
 	}
 }

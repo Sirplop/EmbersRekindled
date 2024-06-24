@@ -235,7 +235,7 @@ public class MixerCentrifugeBottomBlockEntity extends BlockEntity implements IMe
 	@Override
 	public void setChanged() {
 		super.setChanged();
-		if (!level.isClientSide())
+		if (level instanceof ServerLevel)
 			((ServerLevel) level).getChunkSource().blockChanged(worldPosition);
 	}
 

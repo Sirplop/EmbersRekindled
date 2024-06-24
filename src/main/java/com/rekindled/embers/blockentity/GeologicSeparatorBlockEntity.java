@@ -99,7 +99,7 @@ public class GeologicSeparatorBlockEntity extends OpenTankBlockEntity implements
 	@Override
 	public void setChanged() {
 		super.setChanged();
-		if (!level.isClientSide())
+		if (level instanceof ServerLevel)
 			((ServerLevel) level).getChunkSource().blockChanged(worldPosition);
 	}
 

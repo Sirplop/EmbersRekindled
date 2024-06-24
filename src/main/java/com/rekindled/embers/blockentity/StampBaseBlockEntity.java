@@ -57,7 +57,7 @@ public class StampBaseBlockEntity extends OpenTankBlockEntity implements IExtraC
 
 			@Override
 			public int fill(FluidStack resource, FluidAction action) {
-				if(Misc.isGaseousFluid(resource)) {
+				if (Misc.isGaseousFluid(resource)) {
 					StampBaseBlockEntity.this.setEscapedFluid(resource);
 					return resource.getAmount();
 				}
@@ -135,7 +135,7 @@ public class StampBaseBlockEntity extends OpenTankBlockEntity implements IExtraC
 	@Override
 	public void setChanged() {
 		super.setChanged();
-		if (!level.isClientSide())
+		if (level instanceof ServerLevel)
 			((ServerLevel) level).getChunkSource().blockChanged(worldPosition);
 	}
 

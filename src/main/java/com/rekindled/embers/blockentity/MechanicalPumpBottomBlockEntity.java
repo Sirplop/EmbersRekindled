@@ -201,7 +201,7 @@ public class MechanicalPumpBottomBlockEntity extends BlockEntity implements IMec
 	@Override
 	public void setChanged() {
 		super.setChanged();
-		if (!level.isClientSide())
+		if (level instanceof ServerLevel)
 			((ServerLevel) level).getChunkSource().blockChanged(worldPosition);
 	}
 }

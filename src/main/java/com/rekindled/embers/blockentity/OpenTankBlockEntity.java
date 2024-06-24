@@ -25,7 +25,7 @@ public abstract class OpenTankBlockEntity extends FluidHandlerBlockEntity {
 	@Override
 	public void load(CompoundTag nbt) {
 		super.load(nbt);
-		if(nbt.contains("lastEscaped")) {
+		if (nbt.contains("lastEscaped")) {
 			lastEscaped = FluidStack.loadFluidStackFromNBT(nbt.getCompound("lastEscaped"));
 			lastEscapedTickServer = nbt.getLong("lastEscapedTick");
 		}
@@ -64,14 +64,14 @@ public abstract class OpenTankBlockEntity extends FluidHandlerBlockEntity {
 	}
 
 	protected boolean shouldEmitParticles() {
-		if(lastEscaped == null)
+		if (lastEscaped == null)
 			return false;
-		if(lastEscapedTickClient < lastEscapedTickServer) {
+		if (lastEscapedTickClient < lastEscapedTickServer) {
 			lastEscapedTickClient = lastEscapedTickServer;
 			return true;
 		}
 		long dTime = level.getLevelData().getGameTime() - lastEscapedTickClient;
-		if(dTime < lastEscaped.getAmount() + 5)
+		if (dTime < lastEscaped.getAmount() + 5)
 			return true;
 		return false;
 	}

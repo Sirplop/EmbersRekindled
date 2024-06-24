@@ -157,7 +157,7 @@ public class MelterTopBlockEntity extends OpenTankBlockEntity implements IExtraC
 	@Override
 	public void setChanged() {
 		super.setChanged();
-		if (!level.isClientSide())
+		if (level instanceof ServerLevel)
 			((ServerLevel) level).getChunkSource().blockChanged(worldPosition);
 	}
 
@@ -181,9 +181,9 @@ public class MelterTopBlockEntity extends OpenTankBlockEntity implements IExtraC
 
 	@Override
 	public void addCapabilityDescription(List<Component> strings, Capability<?> capability, Direction facing) {
-		if(capability == ForgeCapabilities.ITEM_HANDLER)
+		if (capability == ForgeCapabilities.ITEM_HANDLER)
 			strings.add(IExtraCapabilityInformation.formatCapability(EnumIOType.INPUT, Embers.MODID + ".tooltip.goggles.item", null));
-		if(capability == ForgeCapabilities.FLUID_HANDLER)
+		if (capability == ForgeCapabilities.FLUID_HANDLER)
 			strings.add(IExtraCapabilityInformation.formatCapability(EnumIOType.OUTPUT, Embers.MODID + ".tooltip.goggles.fluid", Component.translatable(Embers.MODID + ".tooltip.goggles.fluid.metal")));
 	}
 }

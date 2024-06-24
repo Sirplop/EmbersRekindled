@@ -113,6 +113,13 @@ public class CombustionChamberBlockEntity extends BlockEntity implements IExtraC
 	}
 
 	@Override
+	public void setChanged() {
+		super.setChanged();
+		if (level instanceof ServerLevel)
+			((ServerLevel) level).getChunkSource().blockChanged(worldPosition);
+	}
+
+	@Override
 	public boolean hasCapabilityDescription(Capability<?> capability) {
 		return capability == ForgeCapabilities.ITEM_HANDLER;
 	}

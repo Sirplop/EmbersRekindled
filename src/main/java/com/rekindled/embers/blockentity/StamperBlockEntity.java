@@ -226,7 +226,7 @@ public class StamperBlockEntity extends BlockEntity implements IMechanicallyPowe
 	@Override
 	public void setChanged() {
 		super.setChanged();
-		if (!level.isClientSide())
+		if (level instanceof ServerLevel)
 			((ServerLevel) level).getChunkSource().blockChanged(worldPosition);
 	}
 
@@ -257,7 +257,7 @@ public class StamperBlockEntity extends BlockEntity implements IMechanicallyPowe
 
 	@Override
 	public void addCapabilityDescription(List<Component> strings, Capability<?> capability, Direction facing) {
-		if(capability == ForgeCapabilities.ITEM_HANDLER)
+		if (capability == ForgeCapabilities.ITEM_HANDLER)
 			strings.add(IExtraCapabilityInformation.formatCapability(EnumIOType.BOTH, Embers.MODID + ".tooltip.goggles.item", Component.translatable(Embers.MODID + ".tooltip.goggles.item.stamp")));
 	}
 }

@@ -125,7 +125,7 @@ public class PressureRefineryBottomBlockEntity extends FluidHandlerBlockEntity i
 	public static void serverTick(Level level, BlockPos pos, BlockState state, PressureRefineryBottomBlockEntity blockEntity) {
 		blockEntity.upgrades = UpgradeUtil.getUpgrades(level, pos, Misc.horizontals);
 		UpgradeUtil.verifyUpgrades(blockEntity, blockEntity.upgrades);
-		if(UpgradeUtil.doTick(blockEntity, blockEntity.upgrades))
+		if (UpgradeUtil.doTick(blockEntity, blockEntity.upgrades))
 			return;
 
 		if (!blockEntity.inventory.getStackInSlot(0).isEmpty()) {

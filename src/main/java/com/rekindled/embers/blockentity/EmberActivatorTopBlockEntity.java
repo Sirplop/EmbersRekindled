@@ -146,7 +146,7 @@ public class EmberActivatorTopBlockEntity extends BlockEntity implements ISoundC
 	@Override
 	public void setChanged() {
 		super.setChanged();
-		if (!level.isClientSide())
+		if (level instanceof ServerLevel)
 			((ServerLevel) level).getChunkSource().blockChanged(worldPosition);
 	}
 }

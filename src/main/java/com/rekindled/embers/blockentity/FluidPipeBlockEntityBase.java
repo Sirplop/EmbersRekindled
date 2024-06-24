@@ -276,7 +276,7 @@ public abstract class FluidPipeBlockEntityBase extends PipeBlockEntityBase imple
 	@Override
 	public void setChanged() {
 		super.setChanged();
-		if (!level.isClientSide())
+		if (level instanceof ServerLevel)
 			((ServerLevel) level).getChunkSource().blockChanged(worldPosition);
 	}
 
