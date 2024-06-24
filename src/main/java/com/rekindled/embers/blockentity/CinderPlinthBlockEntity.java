@@ -22,10 +22,10 @@ import com.rekindled.embers.particle.SmokeParticleOptions;
 import com.rekindled.embers.power.DefaultEmberCapability;
 import com.rekindled.embers.util.sound.ISoundController;
 
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -217,7 +217,7 @@ public class CinderPlinthBlockEntity extends BlockEntity implements ISoundContro
 	}
 
 	@Override
-	public void addDialInformation(Direction facing, List<String> information, String dialType) {
+	public void addDialInformation(Direction facing, List<Component> information, String dialType) {
 		UpgradeUtil.throwEvent(this, new DialInformationEvent(this, information, dialType), upgrades);
 	}
 
@@ -227,10 +227,10 @@ public class CinderPlinthBlockEntity extends BlockEntity implements ISoundContro
 	}
 
 	@Override
-	public void addCapabilityDescription(List<String> strings, Capability<?> capability, Direction facing) {
+	public void addCapabilityDescription(List<Component> strings, Capability<?> capability, Direction facing) {
 		if(capability == ForgeCapabilities.ITEM_HANDLER) {
 			strings.add(IExtraCapabilityInformation.formatCapability(EnumIOType.INPUT, Embers.MODID + ".tooltip.goggles.item", null));
-			strings.add(IExtraCapabilityInformation.formatCapability(EnumIOType.OUTPUT, Embers.MODID + ".tooltip.goggles.item", I18n.get(Embers.MODID + ".tooltip.goggles.item.ash")));
+			strings.add(IExtraCapabilityInformation.formatCapability(EnumIOType.OUTPUT, Embers.MODID + ".tooltip.goggles.item", Component.translatable(Embers.MODID + ".tooltip.goggles.item.ash")));
 		}
 	}
 }

@@ -6,9 +6,9 @@ import com.rekindled.embers.Embers;
 import com.rekindled.embers.RegistryManager;
 import com.rekindled.embers.api.tile.IExtraCapabilityInformation;
 
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
@@ -49,8 +49,8 @@ public class MechanicalPumpTopBlockEntity extends FluidHandlerBlockEntity implem
 	}
 
 	@Override
-	public void addCapabilityDescription(List<String> strings, Capability<?> capability, Direction facing) {
+	public void addCapabilityDescription(List<Component> strings, Capability<?> capability, Direction facing) {
 		if (capability == ForgeCapabilities.FLUID_HANDLER)
-			strings.add(IExtraCapabilityInformation.formatCapability(EnumIOType.OUTPUT, Embers.MODID + ".tooltip.goggles.fluid", I18n.get(Embers.MODID + ".tooltip.goggles.fluid.water")));
+			strings.add(IExtraCapabilityInformation.formatCapability(EnumIOType.OUTPUT, Embers.MODID + ".tooltip.goggles.fluid", Component.translatable(Embers.MODID + ".tooltip.goggles.fluid.water")));
 	}
 }

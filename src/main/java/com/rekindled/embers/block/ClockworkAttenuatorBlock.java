@@ -10,9 +10,9 @@ import com.rekindled.embers.blockentity.ClockworkAttenuatorBlockEntity;
 import com.rekindled.embers.util.DecimalFormats;
 
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -31,22 +31,22 @@ public class ClockworkAttenuatorBlock extends DialBaseBlock implements EntityBlo
 	}
 
 	@Override
-	public List<String> getDisplayInfo(Level world, BlockPos pos, BlockState state, int maxLines) {
-		List<String> text = super.getDisplayInfo(world, pos, state, maxLines);
+	public List<Component> getDisplayInfo(Level world, BlockPos pos, BlockState state, int maxLines) {
+		List<Component> text = super.getDisplayInfo(world, pos, state, maxLines);
 		BlockEntity tile = world.getBlockEntity(pos);
 		if (tile instanceof ClockworkAttenuatorBlockEntity) {
 			DecimalFormat multiplierFormat = DecimalFormats.getDecimalFormat(Embers.MODID + ".decimal_format.attenuator_multiplier");
 			double activeSpeed = ((ClockworkAttenuatorBlockEntity) tile).activeSpeed;
 			double inactiveSpeed = ((ClockworkAttenuatorBlockEntity) tile).inactiveSpeed;
 			boolean active = world.hasNeighborSignal(pos);
-			text.add((active ? ChatFormatting.GREEN : ChatFormatting.DARK_GREEN)+I18n.get(Embers.MODID + ".tooltip.attenuator.on", multiplierFormat.format(activeSpeed)));
-			text.add((!active ? ChatFormatting.RED : ChatFormatting.DARK_RED)+I18n.get(Embers.MODID + ".tooltip.attenuator.off", multiplierFormat.format(inactiveSpeed)));
+			text.add(Component.translatable(Embers.MODID + ".tooltip.attenuator.on", multiplierFormat.format(activeSpeed)).withStyle(active ? ChatFormatting.GREEN : ChatFormatting.DARK_GREEN));
+			text.add(Component.translatable(Embers.MODID + ".tooltip.attenuator.off", multiplierFormat.format(inactiveSpeed)).withStyle(!active ? ChatFormatting.RED : ChatFormatting.DARK_RED));
 		}
 		return text;
 	}
 
 	@Override
-	protected void getBEData(Direction facing, ArrayList<String> text, BlockEntity blockEntity, int maxLines) {}
+	protected void getBEData(Direction facing, ArrayList<Component> text, BlockEntity blockEntity, int maxLines) {}
 
 	@Override
 	public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {

@@ -745,6 +745,7 @@
   "embers.tooltip.augment_slots": "Augment slots: ",
   "embers.tooltip.augments": "Augments:",
   "embers.tooltip.broken": "Broken",
+  "embers.tooltip.colon": "%s: %s",
   "embers.tooltip.crystal.level": "Level %s",
   "embers.tooltip.crystal.xp": "Refinement %s/%s",
   "embers.tooltip.dial.ember_multiplier": "Production Multiplier: %s",

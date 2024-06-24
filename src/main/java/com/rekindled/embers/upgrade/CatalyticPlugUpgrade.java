@@ -15,7 +15,7 @@ import com.rekindled.embers.recipe.FluidHandlerContext;
 import com.rekindled.embers.util.DecimalFormats;
 import com.rekindled.embers.util.Misc;
 
-import net.minecraft.client.resources.language.I18n;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.api.distmarker.Dist;
@@ -109,7 +109,7 @@ public class CatalyticPlugUpgrade extends DefaultUpgradeProvider {
 				}
 			}
 			DecimalFormat multiplierFormat = DecimalFormats.getDecimalFormat(Embers.MODID + ".decimal_format.speed_multiplier");
-			dialEvent.getInformation().add(I18n.get(Embers.MODID + ".tooltip.upgrade.catalytic_plug", multiplierFormat.format(multiplier)));
+			dialEvent.getInformation().add(Component.translatable(Embers.MODID + ".tooltip.upgrade.catalytic_plug", multiplierFormat.format(multiplier)));
 		}
 	}
 }

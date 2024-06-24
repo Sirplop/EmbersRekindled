@@ -216,7 +216,7 @@ public class EmbersClientEvents {
 					BlockPos pos = result.getBlockPos();
 					BlockState state = world.getBlockState(pos);
 					Direction facing = result.getDirection();
-					List<String> text = new ArrayList<String>();
+					List<Component> text = new ArrayList<Component>();
 
 					if (state.getBlock() instanceof IDial) {
 						text.addAll(((IDial) state.getBlock()).getDisplayInfo(world, result.getBlockPos(), state, Math.max(0, (height / 2 - 100) / 11)));
@@ -276,27 +276,27 @@ public class EmbersClientEvents {
 		graphics.pose().popPose();
 	}
 
-	private static void addCapabilityInformation(List<String> text, BlockState state, BlockEntity tile, Direction facing) {
+	private static void addCapabilityInformation(List<Component> text, BlockState state, BlockEntity tile, Direction facing) {
 		addCapabilityItemDescription(text, tile, facing);
 		addCapabilityFluidDescription(text, tile, facing);
 		addCapabilityEmberDescription(text, tile, facing);
 		//if (ConfigManager.isMysticalMechanicsIntegrationEnabled())
 		//MysticalMechanicsIntegration.addCapabilityInformation(text, tile, facing);
 		if (tile.getCapability(EmbersCapabilities.UPGRADE_PROVIDER_CAPABILITY, facing).isPresent())
-			text.add(I18n.get(Embers.MODID + ".tooltip.goggles.upgrade"));
+			text.add(Component.translatable(Embers.MODID + ".tooltip.goggles.upgrade"));
 		if (state.is(EmbersBlockTags.MECH_CORE_PROXYABLE))
-			text.add(I18n.get(Embers.MODID + ".tooltip.goggles.accessor_slot"));
+			text.add(Component.translatable(Embers.MODID + ".tooltip.goggles.accessor_slot"));
 		if (tile instanceof IMechanicallyPowered)
-			text.add(I18n.get(Embers.MODID + ".tooltip.goggles.actuator_slot"));
+			text.add(Component.translatable(Embers.MODID + ".tooltip.goggles.actuator_slot"));
 		if (tile instanceof IExtraCapabilityInformation)
 			((IExtraCapabilityInformation) tile).addOtherDescription(text, facing);
 	}
 
-	public static void addCapabilityItemDescription(List<String> text, BlockEntity tile, Direction facing) {
+	public static void addCapabilityItemDescription(List<Component> text, BlockEntity tile, Direction facing) {
 		Capability<IItemHandler> capability = ForgeCapabilities.ITEM_HANDLER;
 		if (tile.getCapability(capability, facing).isPresent()) {
 			IExtraCapabilityInformation.EnumIOType ioType = IExtraCapabilityInformation.EnumIOType.BOTH;
-			String filter = null;
+			Component filter = null;
 			if (tile instanceof IExtraCapabilityInformation && ((IExtraCapabilityInformation) tile).hasCapabilityDescription(capability)) {
 				((IExtraCapabilityInformation) tile).addCapabilityDescription(text, capability, facing);
 			} else {
@@ -305,11 +305,11 @@ public class EmbersClientEvents {
 		}
 	}
 
-	public static void addCapabilityFluidDescription(List<String> text, BlockEntity tile, Direction facing) {
+	public static void addCapabilityFluidDescription(List<Component> text, BlockEntity tile, Direction facing) {
 		Capability<IFluidHandler> capability = ForgeCapabilities.FLUID_HANDLER;
 		if (tile.getCapability(capability, facing).isPresent()) {
 			IExtraCapabilityInformation.EnumIOType ioType = IExtraCapabilityInformation.EnumIOType.BOTH;
-			String filter = null;
+			Component filter = null;
 			if (tile instanceof IExtraCapabilityInformation && ((IExtraCapabilityInformation) tile).hasCapabilityDescription(capability)) {
 				((IExtraCapabilityInformation) tile).addCapabilityDescription(text, capability, facing);
 			} else {
@@ -332,7 +332,7 @@ public class EmbersClientEvents {
 		}
 	}
 
-	public static void addCapabilityEmberDescription(List<String> text, BlockEntity tile, Direction facing) {
+	public static void addCapabilityEmberDescription(List<Component> text, BlockEntity tile, Direction facing) {
 		Capability<IEmberCapability> capability = EmbersCapabilities.EMBER_CAPABILITY;
 		if (tile.getCapability(capability, facing).isPresent()) {
 			IExtraCapabilityInformation.EnumIOType ioType = IExtraCapabilityInformation.EnumIOType.BOTH;

@@ -34,10 +34,10 @@ import com.rekindled.embers.util.DecimalFormats;
 import com.rekindled.embers.util.Misc;
 import com.rekindled.embers.util.sound.ISoundController;
 
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -336,12 +336,12 @@ public class HearthCoilBlockEntity extends BlockEntity implements ISoundControll
 	}
 
 	@Override
-	public void addDialInformation(Direction facing, List<String> information, String dialType) {
+	public void addDialInformation(Direction facing, List<Component> information, String dialType) {
 		if (EmberDialBlock.DIAL_TYPE.equals(dialType)) {
 			DecimalFormat heatFormat = DecimalFormats.getDecimalFormat(Embers.MODID + ".decimal_format.heat");
 			double maxHeat = UpgradeUtil.getOtherParameter(this, "max_heat", (double) ConfigManager.HEARTH_COIL_MAX_HEAT.get(), upgrades);
 			double heat = Mth.clamp(this.heat, 0, maxHeat);
-			information.add(I18n.get(Embers.MODID + ".tooltip.dial.heat", heatFormat.format(heat), heatFormat.format(maxHeat)));
+			information.add(Component.translatable(Embers.MODID + ".tooltip.dial.heat", heatFormat.format(heat), heatFormat.format(maxHeat)));
 		}
 		UpgradeUtil.throwEvent(this, new DialInformationEvent(this, information, dialType), upgrades);
 	}
@@ -352,7 +352,7 @@ public class HearthCoilBlockEntity extends BlockEntity implements ISoundControll
 	}
 
 	@Override
-	public void addCapabilityDescription(List<String> strings, Capability<?> capability, Direction facing) {
+	public void addCapabilityDescription(List<Component> strings, Capability<?> capability, Direction facing) {
 		if (capability == ForgeCapabilities.ITEM_HANDLER)
 			strings.add(IExtraCapabilityInformation.formatCapability(EnumIOType.OUTPUT, Embers.MODID + ".tooltip.goggles.item", null));
 	}

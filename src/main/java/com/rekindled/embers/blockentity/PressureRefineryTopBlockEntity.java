@@ -18,6 +18,7 @@ import com.rekindled.embers.util.sound.ISoundController;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -127,7 +128,7 @@ public class PressureRefineryTopBlockEntity extends BlockEntity implements ISoun
 	}
 
 	@Override
-	public void addDialInformation(Direction facing, List<String> information, String dialType) {
+	public void addDialInformation(Direction facing, List<Component> information, String dialType) {
 		BlockEntity bottom = level.getBlockEntity(worldPosition.below());
 		if(bottom instanceof PressureRefineryBottomBlockEntity)
 			((PressureRefineryBottomBlockEntity) bottom).addDialInformation(facing, information, dialType);
@@ -139,7 +140,7 @@ public class PressureRefineryTopBlockEntity extends BlockEntity implements ISoun
 	}
 
 	@Override
-	public void addCapabilityDescription(List<String> strings, Capability<?> capability, Direction facing) {
+	public void addCapabilityDescription(List<Component> strings, Capability<?> capability, Direction facing) {
 		if(capability == EmbersCapabilities.EMBER_CAPABILITY)
 			strings.add(IExtraCapabilityInformation.formatCapability(EnumIOType.OUTPUT, Embers.MODID + ".tooltip.goggles.ember", null));
 	}

@@ -29,10 +29,10 @@ import com.rekindled.embers.util.DecimalFormats;
 import com.rekindled.embers.util.Misc;
 import com.rekindled.embers.util.sound.ISoundController;
 
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -275,19 +275,19 @@ public class IgnemReactorBlockEntity extends BlockEntity implements ISoundContro
 	}
 
 	@Override
-	public void addCapabilityDescription(List<String> strings, Capability<?> capability, Direction facing) {
+	public void addCapabilityDescription(List<Component> strings, Capability<?> capability, Direction facing) {
 		if (capability == ForgeCapabilities.ITEM_HANDLER)
-			strings.add(IExtraCapabilityInformation.formatCapability(EnumIOType.INPUT, Embers.MODID + ".tooltip.goggles.item",I18n.get(Embers.MODID + ".tooltip.goggles.item.ember")));
+			strings.add(IExtraCapabilityInformation.formatCapability(EnumIOType.INPUT, Embers.MODID + ".tooltip.goggles.item", Component.translatable(Embers.MODID + ".tooltip.goggles.item.ember")));
 		if (capability == EmbersCapabilities.EMBER_CAPABILITY)
 			strings.add(IExtraCapabilityInformation.formatCapability(EnumIOType.OUTPUT, Embers.MODID + ".tooltip.goggles.ember", null));
 	}
 
 	@Override
-	public void addDialInformation(Direction facing, List<String> information, String dialType) {
+	public void addDialInformation(Direction facing, List<Component> information, String dialType) {
 		if (EmberDialBlock.DIAL_TYPE.equals(dialType) && Math.max(combustorMult, catalyzerMult) < 2.0f * Math.min(combustorMult, catalyzerMult)) {
 			DecimalFormat multiplierFormat = DecimalFormats.getDecimalFormat(Embers.MODID + ".decimal_format.ember_multiplier");
 			double multiplier = BASE_MULTIPLIER + combustorMult + catalyzerMult;
-			information.add(I18n.get(Embers.MODID + ".tooltip.dial.ember_multiplier", multiplierFormat.format(multiplier)));
+			information.add(Component.translatable(Embers.MODID + ".tooltip.dial.ember_multiplier", multiplierFormat.format(multiplier)));
 		}
 		UpgradeUtil.throwEvent(this, new DialInformationEvent(this, information, dialType), upgrades);
 	}

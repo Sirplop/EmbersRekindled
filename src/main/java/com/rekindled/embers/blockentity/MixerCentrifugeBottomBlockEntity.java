@@ -23,10 +23,10 @@ import com.rekindled.embers.util.Misc;
 import com.rekindled.embers.util.sound.ISoundController;
 
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -245,19 +245,19 @@ public class MixerCentrifugeBottomBlockEntity extends BlockEntity implements IMe
 	}
 
 	@Override
-	public void addDialInformation(Direction facing, List<String> information, String dialType) {
+	public void addDialInformation(Direction facing, List<Component> information, String dialType) {
 		if (FluidDialBlock.DIAL_TYPE.equals(dialType)) {
 			information.clear();
-			information.add((facing == Direction.NORTH ? ChatFormatting.BOLD.toString() : "")+I18n.get(Embers.MODID + ".tooltip.side.north")+ChatFormatting.RESET.toString()+": "+FluidDialBlock.formatFluidStack(north.getFluid(),north.getCapacity()));
+			information.add(Component.translatable(Embers.MODID + ".tooltip.colon", Component.translatable(Embers.MODID + ".tooltip.side.north").withStyle(facing == Direction.NORTH ? ChatFormatting.BOLD : ChatFormatting.RESET), FluidDialBlock.formatFluidStack(north.getFluid(),north.getCapacity())));
 			if (north.getFluid().getFluid().is(EmbersFluidTags.INGOT_TOOLTIP) && north.getFluid().getAmount() >= FluidAmounts.NUGGET_AMOUNT)
 				information.add(FluidAmounts.getIngotTooltip(north.getFluid().getAmount()));
-			information.add((facing == Direction.EAST ? ChatFormatting.BOLD.toString() : "")+I18n.get(Embers.MODID + ".tooltip.side.east")+ChatFormatting.RESET.toString()+": "+FluidDialBlock.formatFluidStack(east.getFluid(),east.getCapacity()));
+			information.add(Component.translatable(Embers.MODID + ".tooltip.colon", Component.translatable(Embers.MODID + ".tooltip.side.east").withStyle(facing == Direction.EAST ? ChatFormatting.BOLD : ChatFormatting.RESET), FluidDialBlock.formatFluidStack(east.getFluid(), east.getCapacity())));
 			if (east.getFluid().getFluid().is(EmbersFluidTags.INGOT_TOOLTIP) && east.getFluid().getAmount() >= FluidAmounts.NUGGET_AMOUNT)
 				information.add(FluidAmounts.getIngotTooltip(east.getFluid().getAmount()));
-			information.add((facing == Direction.SOUTH ? ChatFormatting.BOLD.toString() : "")+I18n.get(Embers.MODID + ".tooltip.side.south")+ChatFormatting.RESET.toString()+": "+FluidDialBlock.formatFluidStack(south.getFluid(),south.getCapacity()));
+			information.add(Component.translatable(Embers.MODID + ".tooltip.colon", Component.translatable(Embers.MODID + ".tooltip.side.south").withStyle(facing == Direction.SOUTH ? ChatFormatting.BOLD : ChatFormatting.RESET), FluidDialBlock.formatFluidStack(south.getFluid(), south.getCapacity())));
 			if (south.getFluid().getFluid().is(EmbersFluidTags.INGOT_TOOLTIP) && south.getFluid().getAmount() >= FluidAmounts.NUGGET_AMOUNT)
 				information.add(FluidAmounts.getIngotTooltip(south.getFluid().getAmount()));
-			information.add((facing == Direction.WEST ? ChatFormatting.BOLD.toString() : "")+I18n.get(Embers.MODID + ".tooltip.side.west")+ChatFormatting.RESET.toString()+": "+FluidDialBlock.formatFluidStack(west.getFluid(),west.getCapacity()));
+			information.add(Component.translatable(Embers.MODID + ".tooltip.colon", Component.translatable(Embers.MODID + ".tooltip.side.west").withStyle(facing == Direction.WEST ? ChatFormatting.BOLD : ChatFormatting.RESET), FluidDialBlock.formatFluidStack(west.getFluid(), west.getCapacity())));
 			if (west.getFluid().getFluid().is(EmbersFluidTags.INGOT_TOOLTIP) && west.getFluid().getAmount() >= FluidAmounts.NUGGET_AMOUNT)
 				information.add(FluidAmounts.getIngotTooltip(west.getFluid().getAmount()));
 		}
@@ -265,8 +265,8 @@ public class MixerCentrifugeBottomBlockEntity extends BlockEntity implements IMe
 	}
 
 	@Override
-	public void addCapabilityDescription(List<String> strings, Capability<?> capability, Direction facing) {
-		strings.add(IExtraCapabilityInformation.formatCapability(EnumIOType.INPUT, Embers.MODID + ".tooltip.goggles.fluid", I18n.get(Embers.MODID + ".tooltip.goggles.fluid.metal")));
+	public void addCapabilityDescription(List<Component> strings, Capability<?> capability, Direction facing) {
+		strings.add(IExtraCapabilityInformation.formatCapability(EnumIOType.INPUT, Embers.MODID + ".tooltip.goggles.fluid", Component.translatable(Embers.MODID + ".tooltip.goggles.fluid.metal")));
 	}
 
 	@Override

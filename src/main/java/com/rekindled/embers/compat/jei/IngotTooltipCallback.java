@@ -31,6 +31,6 @@ public class IngotTooltipCallback implements IRecipeSlotTooltipCallback {
 
 		FluidStack fluid = recipeSlotView.getDisplayedIngredient(ForgeTypes.FLUID_STACK).orElse(FluidStack.EMPTY);
 		if (index != -1 && fluid.getFluid().is(EmbersFluidTags.INGOT_TOOLTIP) && fluid.getAmount() >= FluidAmounts.NUGGET_AMOUNT)
-			tooltip.add(index + 1, Component.literal(FluidAmounts.getIngotTooltip(fluid.getAmount())).setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
+			tooltip.add(index + 1, FluidAmounts.getIngotTooltip(fluid.getAmount()).setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
 	}
 }

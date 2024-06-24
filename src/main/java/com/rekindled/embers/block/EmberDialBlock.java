@@ -10,9 +10,10 @@ import com.rekindled.embers.api.power.IEmberCapability;
 import com.rekindled.embers.blockentity.EmberDialBlockEntity;
 import com.rekindled.embers.util.DecimalFormats;
 
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -47,16 +48,16 @@ public class EmberDialBlock extends DialBaseBlock {
 	}
 
 	@Override
-	protected void getBEData(Direction facing, ArrayList<String> text, BlockEntity blockEntity, int maxLines) {
+	protected void getBEData(Direction facing, ArrayList<Component> text, BlockEntity blockEntity, int maxLines) {
 		if (blockEntity instanceof EmberDialBlockEntity dial && dial.display) {
 			text.add(formatEmber(dial.ember, dial.capacity));
 		}
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public static String formatEmber(double ember, double emberCapacity) {
+	public static MutableComponent formatEmber(double ember, double emberCapacity) {
 		DecimalFormat emberFormat = DecimalFormats.getDecimalFormat(Embers.MODID + ".decimal_format.ember");
-		return I18n.get(Embers.MODID + ".tooltip.emberdial.ember", emberFormat.format(ember), emberFormat.format(emberCapacity));
+		return Component.translatable(Embers.MODID + ".tooltip.emberdial.ember", emberFormat.format(ember), emberFormat.format(emberCapacity));
 	}
 
 	@Override

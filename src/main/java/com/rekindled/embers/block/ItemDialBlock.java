@@ -8,9 +8,10 @@ import com.rekindled.embers.RegistryManager;
 import com.rekindled.embers.blockentity.ItemDialBlockEntity;
 import com.rekindled.embers.util.DecimalFormats;
 
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -54,24 +55,24 @@ public class ItemDialBlock extends DialBaseBlock {
 	}
 
 	@Override
-	protected void getBEData(Direction facing, ArrayList<String> text, BlockEntity blockEntity, int maxLines) {
+	protected void getBEData(Direction facing, ArrayList<Component> text, BlockEntity blockEntity, int maxLines) {
 		if (blockEntity instanceof ItemDialBlockEntity dial && dial.display) {
 			for (int i = 0; i < dial.itemStacks.length && i < maxLines; i++) {
-				text.add(I18n.get(Embers.MODID + ".tooltip.itemdial.slot", i, formatItemStack(dial.itemStacks[i])));
+				text.add(Component.translatable(Embers.MODID + ".tooltip.itemdial.slot", i, formatItemStack(dial.itemStacks[i])));
 			}
 			if ((dial.itemStacks.length + dial.extraLines) > Math.min(maxLines, dial.itemStacks.length)) {
-				text.add(I18n.get(Embers.MODID + ".tooltip.too_many", dial.itemStacks.length - Math.min(maxLines, dial.itemStacks.length) + dial.extraLines));
+				text.add(Component.translatable(Embers.MODID + ".tooltip.too_many", dial.itemStacks.length - Math.min(maxLines, dial.itemStacks.length) + dial.extraLines));
 			}
 		}
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public static String formatItemStack(ItemStack stack) {
+	public static MutableComponent formatItemStack(ItemStack stack) {
 		DecimalFormat stackFormat = DecimalFormats.getDecimalFormat(Embers.MODID + ".decimal_format.item_amount");
 		if (!stack.isEmpty())
-			return I18n.get(Embers.MODID + ".tooltip.itemdial.item", stackFormat.format(stack.getCount()), stack.getHoverName().getString());
+			return Component.translatable(Embers.MODID + ".tooltip.itemdial.item", stackFormat.format(stack.getCount()), stack.getHoverName().getString());
 		else
-			return I18n.get(Embers.MODID + ".tooltip.itemdial.noitem");
+			return Component.translatable(Embers.MODID + ".tooltip.itemdial.noitem");
 	}
 
 	@Override

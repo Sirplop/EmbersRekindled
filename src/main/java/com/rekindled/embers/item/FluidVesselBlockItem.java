@@ -56,7 +56,7 @@ public class FluidVesselBlockItem extends BlockItem {
 	public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag isAdvanced) {
 		IFluidHandler cap = stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).orElse(null);
 		if (cap != null) {
-			tooltip.add(Component.literal(FluidDialBlock.formatFluidStack(cap.getFluidInTank(0), cap.getTankCapacity(0))).withStyle(ChatFormatting.GRAY));
+			tooltip.add(FluidDialBlock.formatFluidStack(cap.getFluidInTank(0), cap.getTankCapacity(0)).withStyle(ChatFormatting.GRAY));
 		}
 	}
 }

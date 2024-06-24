@@ -8,9 +8,10 @@ import com.rekindled.embers.blockentity.FluidDialBlockEntity;
 import com.rekindled.embers.datagen.EmbersFluidTags;
 import com.rekindled.embers.util.FluidAmounts;
 
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -54,7 +55,7 @@ public class FluidDialBlock extends DialBaseBlock {
 	}
 
 	@Override
-	protected void getBEData(Direction facing, ArrayList<String> text, BlockEntity blockEntity, int maxLines) {
+	protected void getBEData(Direction facing, ArrayList<Component> text, BlockEntity blockEntity, int maxLines) {
 		if (blockEntity instanceof FluidDialBlockEntity dial && dial.display) {
 			int extraLines = 0;
 			for (int i = 0; i < dial.fluids.length && (i + extraLines) < maxLines; i++) {
@@ -67,17 +68,17 @@ public class FluidDialBlock extends DialBaseBlock {
 				}
 			}
 			if ((dial.fluids.length + dial.extraLines + extraLines) > Math.min(maxLines, dial.fluids.length + extraLines)) {
-				text.add(I18n.get(Embers.MODID + ".tooltip.too_many", dial.fluids.length + extraLines - Math.min(maxLines, dial.fluids.length + extraLines) + dial.extraLines));
+				text.add(Component.translatable(Embers.MODID + ".tooltip.too_many", dial.fluids.length + extraLines - Math.min(maxLines, dial.fluids.length + extraLines) + dial.extraLines));
 			}
 		}
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public static String formatFluidStack(FluidStack contents, int capacity) {
+	public static MutableComponent formatFluidStack(FluidStack contents, int capacity) {
 		if (!contents.isEmpty())
-			return I18n.get(Embers.MODID + ".tooltip.fluiddial.fluid", contents.getDisplayName().getString(), contents.getAmount(), capacity);
+			return Component.translatable(Embers.MODID + ".tooltip.fluiddial.fluid", contents.getDisplayName().getString(), contents.getAmount(), capacity);
 		else
-			return I18n.get(Embers.MODID + ".tooltip.fluiddial.nofluid", capacity);
+			return Component.translatable(Embers.MODID + ".tooltip.fluiddial.nofluid", capacity);
 	}
 
 	@Override

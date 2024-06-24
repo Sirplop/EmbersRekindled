@@ -13,6 +13,7 @@ import com.rekindled.embers.datagen.EmbersBlockTags;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -70,7 +71,7 @@ public class MechanicalCoreBlockEntity extends BlockEntity implements IExtraDial
 	}
 
 	@Override
-	public void addDialInformation(Direction facing, List<String> information, String dialType) {
+	public void addDialInformation(Direction facing, List<Component> information, String dialType) {
 		BlockEntityDirection multiblock = getAttachedMultiblock(ConfigManager.MAX_PROXY_DISTANCE.get());
 		if(multiblock != null && multiblock.blockEntity instanceof IExtraDialInformation)
 			((IExtraDialInformation) multiblock.blockEntity).addDialInformation(multiblock.direction, information, dialType);
@@ -85,14 +86,14 @@ public class MechanicalCoreBlockEntity extends BlockEntity implements IExtraDial
 	}
 
 	@Override
-	public void addCapabilityDescription(List<String> strings, Capability<?> capability, Direction facing) {
+	public void addCapabilityDescription(List<Component> strings, Capability<?> capability, Direction facing) {
 		BlockEntityDirection multiblock = getAttachedMultiblock(ConfigManager.MAX_PROXY_DISTANCE.get());
 		if(multiblock != null && multiblock.blockEntity instanceof IExtraCapabilityInformation)
 			((IExtraCapabilityInformation) multiblock.blockEntity).addCapabilityDescription(strings, capability, multiblock.direction);
 	}
 
 	@Override
-	public void addOtherDescription(List<String> strings, Direction facing) {
+	public void addOtherDescription(List<Component> strings, Direction facing) {
 		BlockEntityDirection multiblock = getAttachedMultiblock(ConfigManager.MAX_PROXY_DISTANCE.get());
 		if(multiblock != null && multiblock.blockEntity instanceof IExtraCapabilityInformation)
 			((IExtraCapabilityInformation) multiblock.blockEntity).addOtherDescription(strings, multiblock.direction);

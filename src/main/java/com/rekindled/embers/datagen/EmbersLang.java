@@ -319,6 +319,7 @@ public class EmbersLang extends LanguageProvider {
 		add(Embers.MODID + ".tooltip.attenuator.off", "When inactive: %s Speed");
 		add(Embers.MODID + ".tooltip.forge.cannot_start", "There is not enough Ember to ignite the forge.");
 		add(Embers.MODID + ".tooltip.too_many", "%s More...");
+		add(Embers.MODID + ".tooltip.colon", "%s: %s");
 
 		add(Embers.MODID + ".tooltip.upgrade.catalytic_plug", "Catalytic Plug Speed: %s");
 

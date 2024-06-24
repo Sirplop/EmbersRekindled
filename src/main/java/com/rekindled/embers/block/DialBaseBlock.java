@@ -12,6 +12,7 @@ import com.rekindled.embers.network.message.MessageDialUpdateRequest;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -127,8 +128,8 @@ public abstract class DialBaseBlock extends DirectionalBlock implements IDial, E
 	}
 
 	@Override
-	public List<String> getDisplayInfo(Level world, BlockPos pos, BlockState state, int maxLines) {
-		ArrayList<String> text = new ArrayList<>();
+	public List<Component> getDisplayInfo(Level world, BlockPos pos, BlockState state, int maxLines) {
+		ArrayList<Component> text = new ArrayList<Component>();
 		BlockEntity tileEntity = world.getBlockEntity(pos);
 		if (tileEntity != null) {
 			Direction facing = state.getValue(FACING);
@@ -139,7 +140,7 @@ public abstract class DialBaseBlock extends DirectionalBlock implements IDial, E
 		return text;
 	}
 
-	protected abstract void getBEData(Direction facing, ArrayList<String> text, BlockEntity blockEntity, int maxLines);
+	protected abstract void getBEData(Direction facing, ArrayList<Component> text, BlockEntity blockEntity, int maxLines);
 
 	@Override
 	public void updateBEData(BlockPos pos, int maxLines) {

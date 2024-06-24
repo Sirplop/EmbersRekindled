@@ -13,10 +13,10 @@ import com.rekindled.embers.datagen.EmbersSounds;
 import com.rekindled.embers.util.Misc;
 import com.rekindled.embers.util.sound.ISoundController;
 
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -221,12 +221,12 @@ public class CrystalSeedBlockEntity extends BlockEntity implements IEmberInjecta
 	}
 
 	@Override
-	public void addOtherDescription(List<String> strings, Direction facing) {
+	public void addOtherDescription(List<Component> strings, Direction facing) {
 		int level = getLevel(xp);
 		int requiredCurrentXP = getRequiredExperienceForLevel(level);
 		int requiredNextXP = getRequiredExperienceForLevel(level+1);
 
-		strings.add(I18n.get(Embers.MODID + ".tooltip.crystal.level", level));
-		strings.add(I18n.get(Embers.MODID + ".tooltip.crystal.xp", xp-requiredCurrentXP, requiredNextXP-requiredCurrentXP));
+		strings.add(Component.translatable(Embers.MODID + ".tooltip.crystal.level", level));
+		strings.add(Component.translatable(Embers.MODID + ".tooltip.crystal.xp", xp-requiredCurrentXP, requiredNextXP-requiredCurrentXP));
 	}
 }
