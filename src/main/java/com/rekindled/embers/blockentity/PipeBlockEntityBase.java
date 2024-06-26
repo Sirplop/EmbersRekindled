@@ -30,8 +30,9 @@ public class PipeBlockEntityBase extends BlockEntity {
 
 	public boolean loaded = false;
 	public boolean saveConnections = true;
-	boolean syncCloggedFlag = true;
-	boolean syncTransfer = true;
+	public boolean syncConnections = true;
+	public boolean syncCloggedFlag = true;
+	public boolean syncTransfer = true;
 
 	public static final ModelProperty<int[]> DATA_TYPE = new ModelProperty<int[]>();
 
@@ -68,6 +69,7 @@ public class PipeBlockEntityBase extends BlockEntity {
 				}
 			}
 		}
+		syncConnections = true;
 		Misc.sendToTrackingPlayers(level, worldPosition, getUpdatePacket());
 		loaded = true;
 		setChanged();
@@ -90,6 +92,7 @@ public class PipeBlockEntityBase extends BlockEntity {
 
 	public void setConnection(Direction direction, PipeConnection connection) {
 		connections[direction.get3DDataValue()] = connection;
+		syncConnections = true;
 		requestModelDataUpdate();
 		setChanged();
 	}
@@ -100,6 +103,7 @@ public class PipeBlockEntityBase extends BlockEntity {
 
 	public void setConnections(PipeConnection[] connections) {
 		this.connections = connections;
+		syncConnections = true;
 		requestModelDataUpdate();
 		setChanged();
 	}
@@ -115,10 +119,11 @@ public class PipeBlockEntityBase extends BlockEntity {
 	protected void resetSync() {
 		syncCloggedFlag = false;
 		syncTransfer = false;
+		syncConnections = false;
 	}
 
 	protected boolean requiresSync() {
-		return syncCloggedFlag || syncTransfer || !loaded;
+		return syncCloggedFlag || syncTransfer || syncConnections || !loaded;
 	}
 
 	@Override
@@ -146,7 +151,8 @@ public class PipeBlockEntityBase extends BlockEntity {
 	@Override
 	public CompoundTag getUpdateTag() {
 		CompoundTag nbt = super.getUpdateTag();
-		writeConnections(nbt);
+		if (syncConnections)
+			writeConnections(nbt);
 		return nbt;
 	}
 
