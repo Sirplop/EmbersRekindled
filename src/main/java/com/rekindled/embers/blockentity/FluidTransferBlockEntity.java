@@ -143,7 +143,8 @@ public class FluidTransferBlockEntity extends FluidPipeBlockEntityBase {
 
 	@Override
 	public PipeConnection getConnection(Direction facing) {
-		return level.getBlockState(this.getBlockPos()).getValue(BlockStateProperties.FACING).getAxis() == facing.getAxis() ? PipeConnection.PIPE : PipeConnection.NONE;
+		BlockState state = level.getBlockState(this.getBlockPos());
+		return state.hasProperty(BlockStateProperties.FACING) && state.getValue(BlockStateProperties.FACING).getAxis() == facing.getAxis() ? PipeConnection.PIPE : PipeConnection.NONE;
 	}
 
 	@Override

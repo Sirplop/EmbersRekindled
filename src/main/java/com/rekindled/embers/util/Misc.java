@@ -31,6 +31,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerChunkCache;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.GsonHelper;
@@ -474,8 +475,10 @@ public class Misc {
 
 	@SuppressWarnings("resource")
 	public static void sendToTrackingPlayers(Level level, BlockPos pos, Packet<?> packet) {
-		for (ServerPlayer serverplayer : ((ServerChunkCache) level.getChunkSource()).chunkMap.getPlayers(new ChunkPos(pos), false)) {
-			serverplayer.connection.send(packet);
+		if (level instanceof ServerLevel && packet != null) {
+			for (ServerPlayer serverplayer : ((ServerChunkCache) level.getChunkSource()).chunkMap.getPlayers(new ChunkPos(pos), false)) {
+				serverplayer.connection.send(packet);
+			}
 		}
 	}
 }

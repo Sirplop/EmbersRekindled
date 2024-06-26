@@ -45,8 +45,6 @@ public abstract class FluidPipeBlockEntityBase extends PipeBlockEntityBase imple
 	public FluidTank tank;
 	public LazyOptional<IFluidHandler> holder = LazyOptional.of(() -> tank);
 	Direction lastTransfer;
-	boolean syncCloggedFlag = true;
-	boolean syncTransfer = true;
 	int ticksExisted;
 	int lastRobin;
 
@@ -195,15 +193,6 @@ public abstract class FluidPipeBlockEntityBase extends PipeBlockEntityBase imple
 		if (isFrom(facing))
 			setFrom(facing, false);
 		return false;
-	}
-
-	protected void resetSync() {
-		syncCloggedFlag = false;
-		syncTransfer = false;
-	}
-
-	protected boolean requiresSync() {
-		return syncCloggedFlag || syncTransfer;
 	}
 
 	@Override

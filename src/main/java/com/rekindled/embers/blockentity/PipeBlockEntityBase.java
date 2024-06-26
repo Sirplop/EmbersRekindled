@@ -2,6 +2,7 @@ package com.rekindled.embers.blockentity;
 
 import com.rekindled.embers.api.block.IPipeConnection;
 import com.rekindled.embers.block.PipeBlockBase;
+import com.rekindled.embers.util.Misc;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -29,6 +30,8 @@ public class PipeBlockEntityBase extends BlockEntity {
 
 	public boolean loaded = false;
 	public boolean saveConnections = true;
+	boolean syncCloggedFlag = true;
+	boolean syncTransfer = true;
 
 	public static final ModelProperty<int[]> DATA_TYPE = new ModelProperty<int[]>();
 
@@ -65,6 +68,7 @@ public class PipeBlockEntityBase extends BlockEntity {
 				}
 			}
 		}
+		Misc.sendToTrackingPlayers(level, worldPosition, getUpdatePacket());
 		loaded = true;
 		setChanged();
 		level.getChunkAt(worldPosition).setUnsaved(true);
@@ -106,6 +110,15 @@ public class PipeBlockEntityBase extends BlockEntity {
 		if (level.isClientSide()) {
 			level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
 		}
+	}
+
+	protected void resetSync() {
+		syncCloggedFlag = false;
+		syncTransfer = false;
+	}
+
+	protected boolean requiresSync() {
+		return syncCloggedFlag || syncTransfer || !loaded;
 	}
 
 	@Override

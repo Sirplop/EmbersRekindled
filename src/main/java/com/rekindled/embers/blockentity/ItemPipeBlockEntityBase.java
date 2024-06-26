@@ -42,8 +42,6 @@ public abstract class ItemPipeBlockEntityBase extends PipeBlockEntityBase implem
 	public ItemStackHandler inventory;
 	public LazyOptional<IItemHandler> holder = LazyOptional.of(() -> inventory);
 	Direction lastTransfer;
-	boolean syncCloggedFlag = true;
-	boolean syncTransfer = true;
 	int ticksExisted;
 	int lastRobin;
 
@@ -204,15 +202,6 @@ public abstract class ItemPipeBlockEntityBase extends PipeBlockEntityBase implem
 		return false;
 	}
 
-	protected void resetSync() {
-		syncCloggedFlag = false;
-		syncTransfer = false;
-	}
-
-	protected boolean requiresSync() {
-		return syncCloggedFlag || syncTransfer;
-	}
-
 	@Override
 	public void load(CompoundTag nbt) {
 		super.load(nbt);
@@ -223,7 +212,7 @@ public abstract class ItemPipeBlockEntityBase extends PipeBlockEntityBase implem
 		if (nbt.contains("lastTransfer"))
 			lastTransfer = Misc.readNullableFacing(nbt.getInt("lastTransfer"));
 		for (Direction facing : Direction.values())
-			if(nbt.contains("from" + facing.get3DDataValue()))
+			if (nbt.contains("from" + facing.get3DDataValue()))
 				from[facing.get3DDataValue()] = nbt.getBoolean("from" + facing.get3DDataValue());
 		if (nbt.contains("lastRobin"))
 			lastRobin = nbt.getInt("lastRobin");

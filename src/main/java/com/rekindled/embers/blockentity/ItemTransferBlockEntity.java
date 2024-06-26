@@ -8,6 +8,7 @@ import com.rekindled.embers.RegistryManager;
 import com.rekindled.embers.api.filter.FilterItem;
 import com.rekindled.embers.api.filter.IFilter;
 import com.rekindled.embers.api.item.IFilterItem;
+import com.rekindled.embers.blockentity.PipeBlockEntityBase.PipeConnection;
 import com.rekindled.embers.particle.VaporParticleOptions;
 import com.rekindled.embers.util.FilterUtil;
 import com.rekindled.embers.util.Misc;
@@ -170,7 +171,8 @@ public class ItemTransferBlockEntity extends ItemPipeBlockEntityBase {
 
 	@Override
 	public PipeConnection getConnection(Direction facing) {
-		return level.getBlockState(this.getBlockPos()).getValue(BlockStateProperties.FACING).getAxis() == facing.getAxis() ? PipeConnection.PIPE : PipeConnection.NONE;
+		BlockState state = level.getBlockState(this.getBlockPos());
+		return state.hasProperty(BlockStateProperties.FACING) && state.getValue(BlockStateProperties.FACING).getAxis() == facing.getAxis() ? PipeConnection.PIPE : PipeConnection.NONE;
 	}
 
 	@Override
