@@ -15,17 +15,22 @@ import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.crafting.CompoundIngredient;
 
 public class AlchemyCategory implements IRecipeCategory<IAlchemyRecipe> {
 
 	private final IDrawable background;
+	private final IDrawable pillar;
 	private final IDrawable icon;
 	public static Component title = Component.translatable(Embers.MODID + ".jei.recipe.alchemy");
 	public static ResourceLocation texture = new ResourceLocation(Embers.MODID, "textures/gui/jei_alchemy.png");
+	public static ResourceLocation pillarTexture = new ResourceLocation(Embers.MODID, "textures/gui/jei_alchemy.png");
 
 	public AlchemyCategory(IGuiHelper helper) {
-		background = helper.createDrawable(texture, 0, 0, 126, 98);
+		background = helper.createDrawable(texture, 0, 0, 126, 108);
+		pillar = helper.createDrawable(pillarTexture, 126, 0, 16, 16);
 		icon = helper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(RegistryManager.ALCHEMY_TABLET_ITEM.get()));
 	}
 
@@ -51,15 +56,21 @@ public class AlchemyCategory implements IRecipeCategory<IAlchemyRecipe> {
 
 	@Override
 	public void setRecipe(IRecipeLayoutBuilder builder, IAlchemyRecipe recipe, IFocusGroup focuses) {
-		builder.addSlot(RecipeIngredientRole.INPUT, 32, 32).addIngredients(recipe.getCenterInput());
-		builder.addSlot(RecipeIngredientRole.OUTPUT, 101, 32).addItemStack(recipe.getResultItem());
-		Vec3 center = new Vec3(0, 25, 0);
+		builder.addSlot(RecipeIngredientRole.INPUT, 32, 37).addIngredients(recipe.getCenterInput());
+		builder.addSlot(RecipeIngredientRole.OUTPUT, 101, 37).addItemStack(recipe.getResultItem());
+		Vec3 center = new Vec3(0, 30, 0);
 		for (int i = 0; i < recipe.getInputs().size(); i++) {
 			Vec3 rotated = center.zRot((float) (i * 2.0 * Math.PI / recipe.getInputs().size()));
-			builder.addSlot(RecipeIngredientRole.INPUT, (int) (32 + rotated.x()), (int) (32 + rotated.y())).addIngredients(recipe.getInputs().get(i));
+			builder.addSlot(RecipeIngredientRole.INPUT, (int) (32 + rotated.x()), (int) (29 + rotated.y())).addIngredients(recipe.getInputs().get(i));
+
+			Ingredient[] aspecti = new Ingredient[recipe.getAspects().size()];
+			for (int j = 0; j < recipe.getAspects().size(); j++) {
+				aspecti[j] = recipe.getAspects().get((j + i) % recipe.getAspects().size());
+			}
+			builder.addSlot(RecipeIngredientRole.CATALYST, (int) (32 + rotated.x()), (int) (45 + rotated.y())).addIngredients(CompoundIngredient.of(aspecti)).setBackground(pillar, 0, 0);
 		}
 		for (int i = 0; i < recipe.getAspects().size(); i++) {
-			builder.addSlot(RecipeIngredientRole.CATALYST, 63 - 8 * recipe.getAspects().size() + 16 * i, 80).addIngredients(recipe.getAspects().get(i));
+			builder.addSlot(RecipeIngredientRole.CATALYST, 63 - 8 * recipe.getAspects().size() + 16 * i, 90).addIngredients(recipe.getAspects().get(i));
 		}
 	}
 }
