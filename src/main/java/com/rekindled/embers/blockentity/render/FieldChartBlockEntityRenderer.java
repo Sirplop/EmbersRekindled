@@ -62,20 +62,26 @@ public class FieldChartBlockEntityRenderer implements BlockEntityRenderer<FieldC
 		float red1 = brightness * color1.getRed() / 255f;
 		float green1 = brightness * color1.getGreen() / 255f;
 		float blue1 = brightness * color1.getBlue() / 255f;
+
+		float[][][] valueCache = new float[10][10][4];
 		for (float i = -160; i < 160; i += 32) {
 			for (float j = -160; j < 160; j += 32) {
-				float amountul = source.get(pos.getX() + (int) i / 2, pos.getZ() + (int) j / 2);
-				float amountur = source.get(pos.getX() + (int) i / 2 + 16, pos.getZ() + (int) j / 2);
-				float amountdr = source.get(pos.getX() + (int) i / 2 + 16, pos.getZ() + (int) j / 2 + 16);
-				float amountdl = source.get(pos.getX() + (int) i / 2, pos.getZ() + (int) j / 2 + 16);
+				float[] values = new float[] {
+						source.get(pos.getX() + (int) i / 2, pos.getZ() + (int) j / 2),
+						source.get(pos.getX() + (int) i / 2 + 16, pos.getZ() + (int) j / 2),
+						source.get(pos.getX() + (int) i / 2 + 16, pos.getZ() + (int) j / 2 + 16),
+						source.get(pos.getX() + (int) i / 2, pos.getZ() + (int) j / 2 + 16)
+				};
+				valueCache[(int) (i/32f)+5][(int) (j/32f)+5] = values;
+
 				float alphaul = Math.min(1.0f, Math.max(0.0f, 1.0f - Math.max(Math.abs(i), Math.abs(j)) / 160f));
 				float alphaur = Math.min(1.0f, Math.max(0.0f, 1.0f - Math.max(Math.abs(i + 32f), Math.abs(j)) / 160f));
 				float alphadr = Math.min(1.0f, Math.max(0.0f, 1.0f - Math.max(Math.abs(i + 32f), Math.abs(j + 32f)) / 160f));
 				float alphadl = Math.min(1.0f, Math.max(0.0f, 1.0f - Math.max(Math.abs(i), Math.abs(j + 32f)) / 160f));
-				buffer.vertex(matrix4f, x + 0.5f + 1.25f * (i / 160f), y + baseHeight + amountul * height, z + 0.5f + 1.25f * (j / 160f)).uv(0, 0).color(red1 * alphaul, green1 * alphaul, blue1 * alphaul, 1).endVertex();
-				buffer.vertex(matrix4f, x + 0.5f + 1.25f * (i / 160f) + 0.25f, y + baseHeight + amountur * height, z + 0.5f + 1.25f * (j / 160f)).uv(1, 0).color(red1 * alphaur, green1 * alphaur, blue1 * alphaur, 1).endVertex();
-				buffer.vertex(matrix4f, x + 0.5f + 1.25f * (i / 160f) + 0.25f, y + baseHeight + amountdr * height, z + 0.5f + 1.25f * (j / 160f) + 0.25f).uv(1, 1).color(red1 * alphadr, green1 * alphadr, blue1 * alphadr, 1).endVertex();
-				buffer.vertex(matrix4f, x + 0.5f + 1.25f * (i / 160f), y + baseHeight + amountdl * height, z + 0.5f + 1.25f * (j / 160f) + 0.25f).uv(0, 1).color(red1 * alphadl, green1 * alphadl, blue1 * alphadl, 1).endVertex();
+				buffer.vertex(matrix4f, x + 0.5f + 1.25f * (i / 160f), y + baseHeight + values[0] * height, z + 0.5f + 1.25f * (j / 160f)).uv(0, 0).color(red1 * alphaul, green1 * alphaul, blue1 * alphaul, 1).endVertex();
+				buffer.vertex(matrix4f, x + 0.5f + 1.25f * (i / 160f) + 0.25f, y + baseHeight + values[1] * height, z + 0.5f + 1.25f * (j / 160f)).uv(1, 0).color(red1 * alphaur, green1 * alphaur, blue1 * alphaur, 1).endVertex();
+				buffer.vertex(matrix4f, x + 0.5f + 1.25f * (i / 160f) + 0.25f, y + baseHeight + values[2] * height, z + 0.5f + 1.25f * (j / 160f) + 0.25f).uv(1, 1).color(red1 * alphadr, green1 * alphadr, blue1 * alphadr, 1).endVertex();
+				buffer.vertex(matrix4f, x + 0.5f + 1.25f * (i / 160f), y + baseHeight + values[3] * height, z + 0.5f + 1.25f * (j / 160f) + 0.25f).uv(0, 1).color(red1 * alphadl, green1 * alphadl, blue1 * alphadl, 1).endVertex();
 			}
 		}
 		float red2 = brightness * color2.getRed() / 255f;
@@ -83,10 +89,11 @@ public class FieldChartBlockEntityRenderer implements BlockEntityRenderer<FieldC
 		float blue2 = brightness * color2.getBlue() / 255f;
 		for (float i = -160; i < 160; i += 32) {
 			for (float j = -160; j < 160; j += 32) {
-				float amountul = source.get(pos.getX() + (int) i / 2, pos.getZ() + (int) j / 2);
-				float amountur = source.get(pos.getX() + (int) i / 2 + 16, pos.getZ() + (int) j / 2);
-				float amountdr = source.get(pos.getX() + (int) i / 2 + 16, pos.getZ() + (int) j / 2 + 16);
-				float amountdl = source.get(pos.getX() + (int) i / 2, pos.getZ() + (int) j / 2 + 16);
+				float[] values = valueCache[(int) (i/32f)+5][(int) (j/32f)+5];
+				float amountul = values[0];
+				float amountur = values[1];
+				float amountdr = values[2];
+				float amountdl = values[3];
 				float alphaul = Math.min(1.0f, Math.max(0.0f, 1.0f - Math.max(Math.abs(i), Math.abs(j)) / 160f) * amountul * amountul) * 0.875f;
 				float alphaur = Math.min(1.0f, Math.max(0.0f, 1.0f - Math.max(Math.abs(i + 32f), Math.abs(j)) / 160f) * amountur * amountur) * 0.875f;
 				float alphadr = Math.min(1.0f, Math.max(0.0f, 1.0f - Math.max(Math.abs(i + 32f), Math.abs(j + 32f)) / 160f) * amountdr * amountdr) * 0.875f;
@@ -102,10 +109,11 @@ public class FieldChartBlockEntityRenderer implements BlockEntityRenderer<FieldC
 		float blue3 = brightness * color3.getBlue() / 255f;
 		for (float i = -160; i < 160; i += 32) {
 			for (float j = -160; j < 160; j += 32) {
-				float amountul = source.get(pos.getX() + (int) i / 2, pos.getZ() + (int) j / 2);
-				float amountur = source.get(pos.getX() + (int) i / 2 + 16, pos.getZ() + (int) j / 2);
-				float amountdr = source.get(pos.getX() + (int) i / 2 + 16, pos.getZ() + (int) j / 2 + 16);
-				float amountdl = source.get(pos.getX() + (int) i / 2, pos.getZ() + (int) j / 2 + 16);
+				float[] values = valueCache[(int) (i/32f)+5][(int) (j/32f)+5];
+				float amountul = values[0];
+				float amountur = values[1];
+				float amountdr = values[2];
+				float amountdl = values[3];
 				float alphaul = Math.min(1.0f, Math.max(0.0f, 1.0f - Math.max(Math.abs(i), Math.abs(j)) / 160f) * amountul * amountul * amountul);
 				float alphaur = Math.min(1.0f, Math.max(0.0f, 1.0f - Math.max(Math.abs(i + 32f), Math.abs(j)) / 160f) * amountur * amountur * amountur);
 				float alphadr = Math.min(1.0f, Math.max(0.0f, 1.0f - Math.max(Math.abs(i + 32f), Math.abs(j + 32f)) / 160f) * amountdr * amountdr * amountdr);
