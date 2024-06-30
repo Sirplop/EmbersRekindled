@@ -7,6 +7,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fluids.FluidStack;
@@ -56,15 +57,24 @@ public abstract class OpenTankBlockEntity extends FluidHandlerBlockEntity {
 		return ClientboundBlockEntityDataPacket.create(this);
 	}
 
-	public void setEscapedFluid(FluidStack stack) {
-		lastEscaped = stack;
-		lastEscapedTickServer = level.getLevelData().getGameTime();
+	@Override
+	public void setChanged() {
+		super.setChanged();
+		if (level instanceof ServerLevel)
+			((ServerLevel) level).getChunkSource().blockChanged(worldPosition);
+	}
 
-		this.setChanged();
+	public void setEscapedFluid(FluidStack stack) {
+		if (stack != null && !stack.isEmpty()) {
+			lastEscaped = stack.copy();
+			lastEscapedTickServer = level.getLevelData().getGameTime();
+
+			this.setChanged();
+		}
 	}
 
 	protected boolean shouldEmitParticles() {
-		if (lastEscaped == null)
+		if (lastEscaped == null || lastEscaped.isEmpty())
 			return false;
 		if (lastEscapedTickClient < lastEscapedTickServer) {
 			lastEscapedTickClient = lastEscapedTickServer;

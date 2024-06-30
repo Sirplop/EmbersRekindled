@@ -21,7 +21,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity.RemovalReason;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
@@ -62,7 +61,7 @@ public class MelterTopBlockEntity extends OpenTankBlockEntity implements IExtraC
 
 			@Override
 			public int fill(FluidStack resource, FluidAction action) {
-				if(Misc.isGaseousFluid(resource)) {
+				if (Misc.isGaseousFluid(resource)) {
 					MelterTopBlockEntity.this.setEscapedFluid(resource);
 					return resource.getAmount();
 				}
@@ -152,13 +151,6 @@ public class MelterTopBlockEntity extends OpenTankBlockEntity implements IExtraC
 	public void invalidateCaps() {
 		super.invalidateCaps();
 		holder.invalidate();
-	}
-
-	@Override
-	public void setChanged() {
-		super.setChanged();
-		if (level instanceof ServerLevel)
-			((ServerLevel) level).getChunkSource().blockChanged(worldPosition);
 	}
 
 	@SuppressWarnings("resource")

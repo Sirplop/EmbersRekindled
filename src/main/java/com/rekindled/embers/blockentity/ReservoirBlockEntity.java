@@ -20,7 +20,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -48,7 +47,7 @@ public class ReservoirBlockEntity extends OpenTankBlockEntity {
 
 			@Override
 			public int fill(FluidStack resource, FluidAction action) {
-				if(Misc.isGaseousFluid(resource)) {
+				if (Misc.isGaseousFluid(resource)) {
 					ReservoirBlockEntity.this.setEscapedFluid(resource);
 					return resource.getAmount();
 				}
@@ -131,13 +130,6 @@ public class ReservoirBlockEntity extends OpenTankBlockEntity {
 
 		if (blockEntity.ticksExisted % 20 == 0)
 			blockEntity.updateCapacity();
-	}
-
-	@Override
-	public void setChanged() {
-		super.setChanged();
-		if (level instanceof ServerLevel)
-			((ServerLevel) level).getChunkSource().blockChanged(worldPosition);
 	}
 
 	@SuppressWarnings("resource")

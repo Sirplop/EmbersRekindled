@@ -21,7 +21,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
@@ -130,13 +129,6 @@ public class StampBaseBlockEntity extends OpenTankBlockEntity implements IExtraC
 	public void invalidateCaps() {
 		super.invalidateCaps();
 		holder.invalidate();
-	}
-
-	@Override
-	public void setChanged() {
-		super.setChanged();
-		if (level instanceof ServerLevel)
-			((ServerLevel) level).getChunkSource().blockChanged(worldPosition);
 	}
 
 	@SuppressWarnings("resource")

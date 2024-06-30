@@ -12,7 +12,6 @@ import com.rekindled.embers.util.Misc;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
@@ -35,7 +34,7 @@ public class FluidVesselBlockEntity extends OpenTankBlockEntity {
 
 			@Override
 			public int fill(FluidStack resource, FluidAction action) {
-				if(Misc.isGaseousFluid(resource)) {
+				if (Misc.isGaseousFluid(resource)) {
 					FluidVesselBlockEntity.this.setEscapedFluid(resource);
 					return resource.getAmount();
 				}
@@ -70,13 +69,6 @@ public class FluidVesselBlockEntity extends OpenTankBlockEntity {
 
 		if (blockEntity.shouldEmitParticles())
 			blockEntity.updateEscapeParticles();
-	}
-
-	@Override
-	public void setChanged() {
-		super.setChanged();
-		if (level instanceof ServerLevel)
-			((ServerLevel) level).getChunkSource().blockChanged(worldPosition);
 	}
 
 	@SuppressWarnings("resource")

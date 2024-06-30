@@ -19,7 +19,6 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -48,7 +47,7 @@ public class GeologicSeparatorBlockEntity extends OpenTankBlockEntity implements
 
 			@Override
 			public int fill(FluidStack resource, FluidAction action) {
-				if(Misc.isGaseousFluid(resource)) {
+				if (Misc.isGaseousFluid(resource)) {
 					GeologicSeparatorBlockEntity.this.setEscapedFluid(resource);
 					return resource.getAmount();
 				}
@@ -94,13 +93,6 @@ public class GeologicSeparatorBlockEntity extends OpenTankBlockEntity implements
 
 		if (blockEntity.shouldEmitParticles())
 			blockEntity.updateEscapeParticles();
-	}
-
-	@Override
-	public void setChanged() {
-		super.setChanged();
-		if (level instanceof ServerLevel)
-			((ServerLevel) level).getChunkSource().blockChanged(worldPosition);
 	}
 
 	@Override
