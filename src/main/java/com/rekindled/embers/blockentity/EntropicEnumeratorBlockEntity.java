@@ -54,6 +54,7 @@ public class EntropicEnumeratorBlockEntity extends BlockEntity implements IExtra
 	};
 
 	public long nextMoveTime = -1;
+	public int moveOffset = -1;
 	public Move[] moveQueue = new Move[0];
 	public int[] offsetQueue = new int[0];
 	public boolean solving;
@@ -92,6 +93,7 @@ public class EntropicEnumeratorBlockEntity extends BlockEntity implements IExtra
 				offsetQueue[i] = queue.getCompound(i).getInt("offset");
 			}
 		}
+		moveOffset = nbt.getInt("moveOffset");
 		solving = nbt.getBoolean("solving");
 		previousMove = -10;
 	}
@@ -126,6 +128,7 @@ public class EntropicEnumeratorBlockEntity extends BlockEntity implements IExtra
 			queue.add(i, entry);
 		}
 		nbt.put("queue", queue);
+		nbt.putInt("moveOffset", moveOffset);
 		nbt.putBoolean("solving", solving);
 	}
 
@@ -810,7 +813,7 @@ public class EntropicEnumeratorBlockEntity extends BlockEntity implements IExtra
 		setChanged();
 	}
 
-	public void restartScramble() {
+	public void restartScramble(int offset) {
 		if (moveQueue.length > 0) {
 			for (int i = 0; i < moveQueue.length; i++) {
 				moveQueue[i].makeMove(cube);
@@ -819,6 +822,7 @@ public class EntropicEnumeratorBlockEntity extends BlockEntity implements IExtra
 		moveQueue = new Move[0];
 		offsetQueue = new int[0];
 		solving = false;
+		moveOffset = ((int) (level.getGameTime() % queueTime) + offset) % queueTime;
 		setChanged();
 	}
 
@@ -923,15 +927,13 @@ public class EntropicEnumeratorBlockEntity extends BlockEntity implements IExtra
 	public static void serverTick(Level level, BlockPos pos, BlockState state, EntropicEnumeratorBlockEntity blockEntity) {
 		if (blockEntity.solving)
 			return;
-		seededRand.setSeed(pos.asLong());
-		seededRand.nextInt();
-		seededRand.nextInt();
-		seededRand.nextInt();
-		seededRand.nextInt();
-		seededRand.nextInt();
-		seededRand.nextInt();
-		seededRand.nextInt(); //for some reason the rand generates better numbers if you warm it up a little first
-		if (level.getGameTime() % queueTime == seededRand.nextInt(queueTime)) {
+
+		if (blockEntity.moveOffset == -1) {
+			blockEntity.moveOffset = ((int) (level.getGameTime() % queueTime) + 2) % queueTime;
+			blockEntity.setChanged();
+		}
+
+		if (level.getGameTime() % queueTime == blockEntity.moveOffset) {
 			Move lastMove = null;
 			if (blockEntity.moveQueue.length > 0) {
 				for (int i = 0; i < blockEntity.moveQueue.length; i++) {

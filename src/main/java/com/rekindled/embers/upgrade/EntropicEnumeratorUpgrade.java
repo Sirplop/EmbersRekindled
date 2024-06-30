@@ -45,7 +45,7 @@ public class EntropicEnumeratorUpgrade extends DefaultUpgradeProvider {
 						}
 					}
 				}
-				enumerator.restartScramble();
+				enumerator.restartScramble(Misc.random.nextInt(EntropicEnumeratorBlockEntity.queueTime));
 			}
 		}
 	}

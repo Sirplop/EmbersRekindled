@@ -48,7 +48,7 @@ public class EntropicEnumeratorBlock extends BaseEntityBlock implements SimpleWa
 	public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
 		if (level.getBlockEntity(pos) instanceof EntropicEnumeratorBlockEntity enumerator) {
 			if (enumerator.isSolved()) {
-				enumerator.restartScramble();
+				enumerator.restartScramble(2);
 			} else if (!enumerator.solving) {
 				enumerator.solve(true, 0);
 			}
