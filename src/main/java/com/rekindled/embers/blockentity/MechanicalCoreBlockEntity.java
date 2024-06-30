@@ -9,7 +9,7 @@ import com.rekindled.embers.api.tile.IExtraDialInformation;
 import com.rekindled.embers.api.upgrades.IUpgradeProxy;
 import com.rekindled.embers.api.upgrades.UpgradeContext;
 import com.rekindled.embers.api.upgrades.UpgradeUtil;
-import com.rekindled.embers.datagen.EmbersBlockTags;
+import com.rekindled.embers.util.Misc;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -31,7 +31,7 @@ public class MechanicalCoreBlockEntity extends BlockEntity implements IExtraDial
 			return null;
 		}
 		BlockPos sidePos = worldPosition.relative(getAttachedSide());
-		if (level.getBlockState(sidePos).is(EmbersBlockTags.MECH_CORE_PROXYABLE)) {
+		if (Misc.isSideProxyable(level.getBlockState(sidePos), getFace())) {
 			return new BlockEntityDirection(level.getBlockEntity(sidePos), getFace());
 		}
 		if (level.getBlockEntity(sidePos) instanceof MechanicalCoreBlockEntity coreEntity) {
@@ -45,7 +45,7 @@ public class MechanicalCoreBlockEntity extends BlockEntity implements IExtraDial
 			return null;
 		}
 		BlockPos sidePos = worldPosition.relative(getAttachedSide());
-		if (level.getBlockState(sidePos).is(EmbersBlockTags.MECH_CORE_PROXYABLE)) {
+		if (Misc.isSideProxyable(level.getBlockState(sidePos), getFace())) {
 			return level.getBlockEntity(sidePos);
 		}
 		if (level.getBlockEntity(sidePos) instanceof MechanicalCoreBlockEntity coreEntity) {

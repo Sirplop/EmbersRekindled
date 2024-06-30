@@ -27,7 +27,6 @@ import com.rekindled.embers.blockentity.render.ExcavationBucketsBlockEntityRende
 import com.rekindled.embers.blockentity.render.InfernoForgeTopBlockEntityRenderer;
 import com.rekindled.embers.blockentity.render.MechanicalPumpBlockEntityRenderer;
 import com.rekindled.embers.blockentity.render.StamperBlockEntityRenderer;
-import com.rekindled.embers.datagen.EmbersBlockTags;
 import com.rekindled.embers.datagen.EmbersItemTags;
 import com.rekindled.embers.render.EmbersRenderTypes;
 import com.rekindled.embers.upgrade.ExcavationBucketsUpgrade;
@@ -284,7 +283,7 @@ public class EmbersClientEvents {
 		//MysticalMechanicsIntegration.addCapabilityInformation(text, tile, facing);
 		if (tile.getCapability(EmbersCapabilities.UPGRADE_PROVIDER_CAPABILITY, facing).isPresent())
 			text.add(Component.translatable(Embers.MODID + ".tooltip.goggles.upgrade"));
-		if (state.is(EmbersBlockTags.MECH_CORE_PROXYABLE))
+		if (Misc.isSideProxyable(state, facing))
 			text.add(Component.translatable(Embers.MODID + ".tooltip.goggles.accessor_slot"));
 		if (tile instanceof IMechanicallyPowered)
 			text.add(Component.translatable(Embers.MODID + ".tooltip.goggles.actuator_slot"));

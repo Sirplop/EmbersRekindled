@@ -1,13 +1,9 @@
 {
   "values": [
-    "embers:ember_bore",
     "embers:ember_activator",
     "embers:mixer_centrifuge",
     "embers:pressure_refinery",
-    "embers:hearth_coil",
-    "embers:reservoir",
-    "embers:crystal_cell",
     "embers:alchemy_tablet",
-    "embers:inferno_forge"
+    "embers:ignem_reactor"
   ]
 }

@@ -33,6 +33,8 @@ public class EmbersBlockTags extends BlockTagsProvider {
 	public static final TagKey<Block> RELOCATION_NOT_SUPPORTED = BlockTags.create(new ResourceLocation("forge", "relocation_not_supported"));
 
 	public static final TagKey<Block> MECH_CORE_PROXYABLE = BlockTags.create(new ResourceLocation(Embers.MODID, "mech_core_proxyable"));
+	public static final TagKey<Block> MECH_CORE_PROXYABLE_BOTTOM = BlockTags.create(new ResourceLocation(Embers.MODID, "mech_core_proxyable/bottom"));
+	public static final TagKey<Block> MECH_CORE_PROXYABLE_TOP = BlockTags.create(new ResourceLocation(Embers.MODID, "mech_core_proxyable/top"));
 
 	public static final TagKey<Block> HEAT_SOURCES = BlockTags.create(new ResourceLocation(Embers.MODID, "heat_sources"));
 
@@ -292,15 +294,18 @@ public class EmbersBlockTags extends BlockTagsProvider {
 		.addTag(CRYSTAL_SEEDS).addOptional(CuriosCompat.EXPLOSION_PEDESTAL.getId());
 
 		tag(MECH_CORE_PROXYABLE).add(
-				RegistryManager.EMBER_BORE.get(),
 				RegistryManager.EMBER_ACTIVATOR.get(),
 				RegistryManager.MIXER_CENTRIFUGE.get(),
 				RegistryManager.PRESSURE_REFINERY.get(),
+				RegistryManager.ALCHEMY_TABLET.get(),
+				RegistryManager.IGNEM_REACTOR.get());
+		tag(MECH_CORE_PROXYABLE_BOTTOM).add(
 				RegistryManager.HEARTH_COIL.get(),
 				RegistryManager.RESERVOIR.get(),
 				RegistryManager.CRYSTAL_CELL.get(),
-				RegistryManager.ALCHEMY_TABLET.get(),
 				RegistryManager.INFERNO_FORGE.get());
+		tag(MECH_CORE_PROXYABLE_TOP).add(
+				RegistryManager.EMBER_BORE.get());
 
 		tag(RESERVOIR_EXPANSION).add(
 				RegistryManager.CAMINITE_RING.get(),
