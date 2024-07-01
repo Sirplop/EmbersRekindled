@@ -25,6 +25,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.client.model.data.ModelProperty;
 
@@ -154,6 +156,7 @@ public class PipeBlockEntityBase extends BlockEntity {
 		setChanged();
 	}
 
+	@OnlyIn(Dist.CLIENT)
 	public static void clientTick(Level level, BlockPos pos, BlockState state, PipeBlockEntityBase blockEntity) {
 		if (blockEntity.lastTransfer != null && Misc.isWearingLens(Minecraft.getInstance().player)) {
 			float vx = blockEntity.lastTransfer.getStepX() / 1;
