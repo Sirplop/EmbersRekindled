@@ -50,7 +50,7 @@ public class CopperCellBlock extends BaseEntityBlock implements SimpleWaterlogge
 		List<ItemStack> items = super.getDrops(pState, pBuilder);
 		BlockEntity blockentity = pBuilder.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
 		if (blockentity instanceof CopperCellBlockEntity) {
-			CompoundTag nbt = blockentity.getUpdateTag();
+			CompoundTag nbt = blockentity.saveWithoutMetadata();
 			if (nbt != null) {
 				for (ItemStack stack : items) {
 					if (stack.getItem() == RegistryManager.COPPER_CELL_ITEM.get()) {

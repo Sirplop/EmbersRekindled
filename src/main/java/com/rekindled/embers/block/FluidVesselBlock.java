@@ -99,7 +99,7 @@ public class FluidVesselBlock extends BaseEntityBlock implements SimpleWaterlogg
 		List<ItemStack> items = super.getDrops(pState, pBuilder);
 		BlockEntity blockentity = pBuilder.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
 		if (blockentity instanceof FluidVesselBlockEntity) {
-			CompoundTag nbt = blockentity.getUpdateTag();
+			CompoundTag nbt = blockentity.saveWithoutMetadata();
 			if (nbt != null) {
 				for (ItemStack stack : items) {
 					if (stack.getItem() == RegistryManager.FLUID_VESSEL_ITEM.get()) {
