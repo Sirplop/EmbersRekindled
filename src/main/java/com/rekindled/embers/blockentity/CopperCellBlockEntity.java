@@ -33,6 +33,8 @@ public class CopperCellBlockEntity extends BlockEntity {
 	public void load(CompoundTag nbt) {
 		super.load(nbt);
 		capability.deserializeNBT(nbt);
+		if (capability.getEmberCapacity() == 0)
+			capability.setEmberCapacity(24000);
 	}
 
 	@Override
