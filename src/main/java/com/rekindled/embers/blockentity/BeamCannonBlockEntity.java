@@ -139,7 +139,7 @@ public class BeamCannonBlockEntity extends BlockEntity {
 				doContinue = false;
 				impactDist = i + 1;
 			} else if (tile instanceof IEmberPacketReceiver) {
-				IEmberCapability cap = tile.getCapability(EmbersCapabilities.EMBER_CAPABILITY, null).orElseGet(null);
+				IEmberCapability cap = tile.getCapability(EmbersCapabilities.EMBER_CAPABILITY, null).orElse(null);
 				if (cap != null) {
 					cap.addAmount(capability.getEmber(), true);
 				}
