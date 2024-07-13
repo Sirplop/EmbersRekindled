@@ -31,9 +31,9 @@ public class DiffractionBarrelAugment extends AugmentBase {
 		ListIterator<IProjectilePreset> projectiles = event.getProjectiles().listIterator();
 
 		ItemStack weapon = event.getStack();
-		if(!weapon.isEmpty() && AugmentUtil.hasHeat(weapon)) {
+		if (!weapon.isEmpty() && AugmentUtil.hasHeat(weapon)) {
 			int level = AugmentUtil.getAugmentLevel(weapon, this);
-			if(level > 0)
+			if (level > 0) {
 				while (projectiles.hasNext()) {
 					IProjectilePreset projectile = projectiles.next();
 					Vec3 velocity = projectile.getVelocity();
@@ -47,20 +47,24 @@ public class DiffractionBarrelAugment extends AugmentBase {
 						for (int i = 0; i < bullets; i++) {
 							double spread = 0.1 * level;
 							Vec3 newVelocity = velocity.add((Misc.random.nextDouble() - 0.5) * speed * 2 * spread, (Misc.random.nextDouble() - 0.5) * speed * 2 * spread, (Misc.random.nextDouble() - 0.5) * speed * 2 * spread).scale(newspeed / speed);
-							projectiles.add(new ProjectileFireball(projectile.getShooter(), projectile.getPos(), newVelocity, 2.4, 80, effect));
+							IProjectilePreset newProjectile = new ProjectileFireball(projectile.getShooter(), projectile.getPos(), newVelocity, 2.4, 80, effect);
+							newProjectile.setColor(projectile.getColor());
+							projectiles.add(newProjectile);
 						}
-					}
-					else if (projectile instanceof ProjectileFireball) {
+					} else if (projectile instanceof ProjectileFireball) {
 						ProjectileFireball fireball = (ProjectileFireball) projectile;
 						adjustEffect(effect, 1.0 / 3.0);
 						projectiles.remove();
 						for (int i = 0; i < bullets; i++) {
 							double spread = 0.1 * level;
 							Vec3 newVelocity = velocity.add((Misc.random.nextDouble() - 0.5) * speed * 2 * spread, (Misc.random.nextDouble() - 0.5) * speed * 2 * spread, (Misc.random.nextDouble() - 0.5) * speed * 2 * spread);
-							projectiles.add(new ProjectileFireball(projectile.getShooter(), projectile.getPos(), newVelocity, fireball.getSize() / 3, fireball.getLifetime() / 2, effect));
+							IProjectilePreset newProjectile = new ProjectileFireball(projectile.getShooter(), projectile.getPos(), newVelocity, fireball.getSize() / 3, fireball.getLifetime() / 2, effect);
+							newProjectile.setColor(projectile.getColor());
+							projectiles.add(newProjectile);
 						}
 					}
 				}
+			}
 		}
 	}
 
