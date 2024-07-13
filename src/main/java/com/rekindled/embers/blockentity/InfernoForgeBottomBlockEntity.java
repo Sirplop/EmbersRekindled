@@ -153,6 +153,12 @@ public class InfernoForgeBottomBlockEntity extends BlockEntity implements IExtra
 		if (cancel || blockEntity.capability.getEmber() < emberCost) {
 			blockEntity.progress = 0;
 			blockEntity.setChanged();
+			if (level.getBlockEntity(pos.above()) instanceof InfernoForgeTopBlockEntity hatch) {
+				hatch.open = true;
+				hatch.lastToggle = level.getGameTime();
+				hatch.setChanged();
+				level.playSound(null, pos, EmbersSounds.INFERNO_FORGE_OPEN.get(), SoundSource.BLOCKS, 1.0f, 1.0f);
+			}
 			return;
 		}
 		UpgradeUtil.throwEvent(blockEntity, new EmberEvent(blockEntity, EmberEvent.EnumType.CONSUME, emberCost), blockEntity.upgrades);
