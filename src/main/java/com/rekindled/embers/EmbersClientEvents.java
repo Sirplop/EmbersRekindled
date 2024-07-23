@@ -219,7 +219,7 @@ public class EmbersClientEvents {
 
 					if (state.getBlock() instanceof IDial) {
 						text.addAll(((IDial) state.getBlock()).getDisplayInfo(world, result.getBlockPos(), state, Math.max(0, (height / 2 - 100) / 11)));
-					} else if (state.getBlock() == RegistryManager.ATMOSPHERIC_GAUGE.get()) {
+					} else if (state.getBlock() == RegistryManager.ATMOSPHERIC_GAUGE.get() && !player.getMainHandItem().is(EmbersItemTags.GAUGE_OVERLAY) && !player.getOffhandItem().is(EmbersItemTags.GAUGE_OVERLAY)) {
 						renderAtmosphericGauge(gui, graphics, player, partialTicks, width, height);
 					} else if (Misc.isWearingLens(player)) {
 						BlockEntity tileEntity = world.getBlockEntity(result.getBlockPos());
@@ -236,7 +236,7 @@ public class EmbersClientEvents {
 			}
 		}
 
-		if (player.getMainHandItem().getItem() == RegistryManager.ATMOSPHERIC_GAUGE_ITEM.get() || player.getOffhandItem().getItem() == RegistryManager.ATMOSPHERIC_GAUGE_ITEM.get()) {
+		if (player.getMainHandItem().getItem() == RegistryManager.ATMOSPHERIC_GAUGE_ITEM.get() || (!player.getMainHandItem().is(EmbersItemTags.GAUGE_OVERLAY) && player.getOffhandItem().getItem() == RegistryManager.ATMOSPHERIC_GAUGE_ITEM.get())) {
 			renderAtmosphericGauge(gui, graphics, player, partialTicks, width, height);
 		}
 	}
