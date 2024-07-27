@@ -8,10 +8,15 @@ import com.rekindled.embers.blockentity.MiniBoilerBlockEntity;
 import com.rekindled.embers.blockentity.PipeBlockEntityBase;
 import com.rekindled.embers.blockentity.PipeBlockEntityBase.PipeConnection;
 import com.rekindled.embers.datagen.EmbersBlockTags;
+import com.rekindled.embers.util.Misc;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -28,9 +33,13 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.fluids.FluidUtil;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 
 public class MiniBoilerBlock extends BaseEntityBlock implements SimpleWaterloggedBlock, IPipeConnection {
 
@@ -39,6 +48,28 @@ public class MiniBoilerBlock extends BaseEntityBlock implements SimpleWaterlogge
 	public MiniBoilerBlock(Properties properties) {
 		super(properties);
 		this.registerDefaultState(this.stateDefinition.any().setValue(BlockStateProperties.WATERLOGGED, false).setValue(BlockStateProperties.HORIZONTAL_FACING, Direction.NORTH));
+	}
+
+	@Override
+	public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+		if (level.getBlockEntity(pos) instanceof MiniBoilerBlockEntity boilerEntity) {
+			ItemStack heldItem = player.getItemInHand(hand);
+			if (!heldItem.isEmpty()) {
+				IFluidHandler cap = Misc.makeRestrictedFluidHandler(boilerEntity.getGasTank(), false, true);
+				if (cap != null) {
+					boolean didFill = FluidUtil.interactWithFluidHandler(player, hand, cap);
+
+					if (didFill) {
+						return InteractionResult.SUCCESS;
+					}
+				}
+				//prevent buckets from placing their fluid in the world when clicking on the boiler
+				if (heldItem.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).isPresent()) {
+					return InteractionResult.CONSUME_PARTIAL;
+				}
+			}
+		}
+		return InteractionResult.PASS;
 	}
 
 	@Override
