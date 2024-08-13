@@ -63,6 +63,11 @@ public class EmbersSounds extends SoundDefinitionsProvider {
 	public static final RegistryObject<SoundEvent> CATALYTIC_PLUG_LOOP = registerSound("block.catalytic_plug.loop");
 	public static final RegistryObject<SoundEvent> CATALYTIC_PLUG_LOOP_READY = registerSound("block.catalytic_plug.loop_ready");
 
+	public static final RegistryObject<SoundEvent> WILDFIRE_STIRLING_START = registerSound("block.wildfire_stirling.start");
+	public static final RegistryObject<SoundEvent> WILDFIRE_STIRLING_STOP = registerSound("block.wildfire_stirling.stop");
+	public static final RegistryObject<SoundEvent> WILDFIRE_STIRLING_LOOP = registerSound("block.wildfire_stirling.loop");
+	public static final RegistryObject<SoundEvent> WILDFIRE_STIRLING_LOOP_READY = registerSound("block.wildfire_stirling.loop_ready");
+
 	public static final RegistryObject<SoundEvent> STAMPER_DOWN = registerSound("block.stamper.down");
 	public static final RegistryObject<SoundEvent> STAMPER_UP = registerSound("block.stamper.up");
 
@@ -293,6 +298,15 @@ public class EmbersSounds extends SoundDefinitionsProvider {
 				sound(resource("catalytic_plug/run_loop"))));
 		add(CATALYTIC_PLUG_LOOP_READY, definition().with(
 				sound(resource("catalytic_plug/ready_loop"))));
+
+		withSubtitle(WILDFIRE_STIRLING_START, definition().with(
+				sound(resource("wildfire_stirling/start"))));
+		withSubtitle(WILDFIRE_STIRLING_STOP, definition().with(
+				sound(resource("wildfire_stirling/stop"))));
+		add(WILDFIRE_STIRLING_LOOP, definition().with(
+				sound(resource("wildfire_stirling/run_loop"))));
+		add(WILDFIRE_STIRLING_LOOP_READY, definition().with(
+				sound(resource("wildfire_stirling/ready_loop"))));
 
 		withSubtitle(STAMPER_DOWN, definition().with(
 				sound(resource("stamper/down1")),

@@ -551,6 +551,28 @@
     ],
     "subtitle": "subtitles.embers.block.steam_engine.stop"
   },
+  "block.wildfire_stirling.loop": {
+    "sounds": [
+      "embers:wildfire_stirling/run_loop"
+    ]
+  },
+  "block.wildfire_stirling.loop_ready": {
+    "sounds": [
+      "embers:wildfire_stirling/ready_loop"
+    ]
+  },
+  "block.wildfire_stirling.start": {
+    "sounds": [
+      "embers:wildfire_stirling/start"
+    ],
+    "subtitle": "subtitles.embers.block.wildfire_stirling.start"
+  },
+  "block.wildfire_stirling.stop": {
+    "sounds": [
+      "embers:wildfire_stirling/stop"
+    ],
+    "subtitle": "subtitles.embers.block.wildfire_stirling.stop"
+  },
   "entity.ancient_golem.death": {
     "sounds": [
       "embers:agolem/die"

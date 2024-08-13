@@ -6,7 +6,6 @@ import java.util.List;
 import com.rekindled.embers.Embers;
 import com.rekindled.embers.RegistryManager;
 import com.rekindled.embers.api.upgrades.UpgradeContext;
-import com.rekindled.embers.blockentity.CatalyticPlugBlockEntity;
 import com.rekindled.embers.blockentity.WildfireStirlingBlockEntity;
 import com.rekindled.embers.recipe.FluidHandlerContext;
 import com.rekindled.embers.util.Misc;
@@ -56,11 +55,11 @@ public class WildfireStirlingUpgrade extends DefaultUpgradeProvider {
 	}
 
 	private double getCatalystMultiplier() {
-		if (this.tile instanceof CatalyticPlugBlockEntity plug) {
-			FluidHandlerContext context = new FluidHandlerContext(plug.tank);
-			if (plug.burnTime <= 0 || plug.cachedRecipe == null)
-				plug.cachedRecipe = Misc.getRecipe(plug.cachedRecipe, RegistryManager.GASEOUS_FUEL.get(), context, plug.getLevel());
-			return plug.cachedRecipe == null ? 1.0 : plug.cachedRecipe.getPowerMultiplier(context);
+		if (this.tile instanceof WildfireStirlingBlockEntity stirling) {
+			FluidHandlerContext context = new FluidHandlerContext(stirling.tank);
+			if (stirling.burnTime <= 0 || stirling.cachedRecipe == null)
+				stirling.cachedRecipe = Misc.getRecipe(stirling.cachedRecipe, RegistryManager.GASEOUS_FUEL.get(), context, stirling.getLevel());
+			return stirling.cachedRecipe == null ? 1.0 : stirling.cachedRecipe.getPowerMultiplier(context);
 		}
 		return 1.0;
 	}

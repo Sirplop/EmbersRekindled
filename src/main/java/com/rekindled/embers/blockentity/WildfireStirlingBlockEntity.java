@@ -1,5 +1,6 @@
 package com.rekindled.embers.blockentity;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 
@@ -9,9 +10,11 @@ import com.rekindled.embers.Embers;
 import com.rekindled.embers.RegistryManager;
 import com.rekindled.embers.api.capabilities.EmbersCapabilities;
 import com.rekindled.embers.api.tile.IExtraCapabilityInformation;
+import com.rekindled.embers.datagen.EmbersSounds;
 import com.rekindled.embers.particle.VaporParticleOptions;
 import com.rekindled.embers.recipe.IGaseousFuelRecipe;
 import com.rekindled.embers.upgrade.WildfireStirlingUpgrade;
+import com.rekindled.embers.util.sound.ISoundController;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -21,6 +24,7 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -33,11 +37,11 @@ import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 
-public class WildfireStirlingBlockEntity extends BlockEntity implements /*ISoundController, */ IExtraCapabilityInformation {
+public class WildfireStirlingBlockEntity extends BlockEntity implements ISoundController, IExtraCapabilityInformation {
 
-	/*public static final int SOUND_OFF = 1;
+	public static final int SOUND_OFF = 1;
 	public static final int SOUND_ON = 2;
-	public static final int[] SOUND_IDS = new int[]{SOUND_OFF,SOUND_ON};*/
+	public static final int[] SOUND_IDS = new int[]{SOUND_OFF,SOUND_ON};
 
 	public int activeTicks = 0;
 	public int burnTime = 0;
@@ -51,7 +55,7 @@ public class WildfireStirlingBlockEntity extends BlockEntity implements /*ISound
 	private static Random random = new Random();
 	public IGaseousFuelRecipe cachedRecipe = null;
 
-	//HashSet<Integer> soundsPlaying = new HashSet<>();
+	HashSet<Integer> soundsPlaying = new HashSet<>();
 	public LazyOptional<IFluidHandler> holder = LazyOptional.of(() -> tank);
 
 	public WildfireStirlingBlockEntity(BlockPos pPos, BlockState pBlockState) {
@@ -99,7 +103,7 @@ public class WildfireStirlingBlockEntity extends BlockEntity implements /*ISound
 	}
 
 	public static void clientTick(Level level, BlockPos pos, BlockState state, WildfireStirlingBlockEntity blockEntity) {
-		//blockEntity.handleSound();
+		blockEntity.handleSound();
 		blockEntity.activeTicks--;
 
 		if (blockEntity.activeTicks > 0 && state.hasProperty(BlockStateProperties.FACING)) {
@@ -183,18 +187,18 @@ public class WildfireStirlingBlockEntity extends BlockEntity implements /*ISound
 			((ServerLevel) level).getChunkSource().blockChanged(worldPosition);
 	}
 
-	/*@Override
+	@Override
 	public void playSound(int id) {
 		float soundX = (float) worldPosition.getX() + 0.5f;
 		float soundY = (float) worldPosition.getY() + 0.5f;
 		float soundZ = (float) worldPosition.getZ() + 0.5f;
 		switch (id) {
 		case SOUND_ON:
-			EmbersSounds.playMachineSound(this, SOUND_ON, EmbersSounds.CATALYTIC_PLUG_LOOP.get(), SoundSource.BLOCKS, true, 1.0f, 1.0f, soundX, soundY, soundZ);
-			level.playSound(null, worldPosition, EmbersSounds.CATALYTIC_PLUG_START.get(), SoundSource.BLOCKS, 1.0f, 1.0f);
+			EmbersSounds.playMachineSound(this, SOUND_ON, EmbersSounds.WILDFIRE_STIRLING_LOOP.get(), SoundSource.BLOCKS, true, 1.0f, 1.0f, soundX, soundY, soundZ);
+			level.playLocalSound(soundX, soundY, soundZ, EmbersSounds.WILDFIRE_STIRLING_START.get(), SoundSource.BLOCKS, 1.0f, 1.0f, false);
 			break;
 		case SOUND_OFF:
-			EmbersSounds.playMachineSound(this, SOUND_OFF, EmbersSounds.CATALYTIC_PLUG_LOOP_READY.get(), SoundSource.BLOCKS, true, 1.0f, 1.0f, soundX, soundY, soundZ);
+			EmbersSounds.playMachineSound(this, SOUND_OFF, EmbersSounds.WILDFIRE_STIRLING_LOOP_READY.get(), SoundSource.BLOCKS, true, 1.0f, 1.0f, soundX, soundY, soundZ);
 			break;
 		}
 		soundsPlaying.add(id);
@@ -202,8 +206,8 @@ public class WildfireStirlingBlockEntity extends BlockEntity implements /*ISound
 
 	@Override
 	public void stopSound(int id) {
-		if(id == SOUND_ON) {
-			level.playSound(null, worldPosition, EmbersSounds.CATALYTIC_PLUG_STOP.get(), SoundSource.BLOCKS, 1.0f, 1.0f);
+		if (id == SOUND_ON) {
+			level.playLocalSound(worldPosition, EmbersSounds.WILDFIRE_STIRLING_STOP.get(), SoundSource.BLOCKS, 1.0f, 1.0f, false);
 		}
 		soundsPlaying.remove(id);
 	}
@@ -240,7 +244,7 @@ public class WildfireStirlingBlockEntity extends BlockEntity implements /*ISound
 		case SOUND_ON: return isWorking ? 1.0f : 0.0f;
 		default: return 0f;
 		}
-	}*/
+	}
 
 	@Override
 	public boolean hasCapabilityDescription(Capability<?> capability) {
