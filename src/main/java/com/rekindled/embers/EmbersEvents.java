@@ -58,7 +58,6 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.ForgeRegistries.Keys;
 import net.minecraftforge.registries.MissingMappingsEvent;
 import net.minecraftforge.registries.MissingMappingsEvent.Mapping;
-import net.minecraftforge.server.ServerLifecycleHooks;
 
 public class EmbersEvents {
 
@@ -190,8 +189,8 @@ public class EmbersEvents {
 	}
 
 	public static void onLevelLoad(LevelEvent.Load event) {
-		if (event.getLevel() instanceof ServerLevel)
-			EmberWorldData.get(ServerLifecycleHooks.getCurrentServer().overworld());
+		if (event.getLevel() instanceof ServerLevel server && server.dimension() == Level.OVERWORLD)
+			EmberWorldData.get(server);
 	}
 
 	public static void onServerTick(LevelTickEvent event) {
@@ -207,7 +206,7 @@ public class EmbersEvents {
 			}
 			if (changed) {
 				PacketHandler.INSTANCE.send(PacketDistributor.ALL.noArg(), new MessageEmberGenOffset(EmberGenUtil.offX, EmberGenUtil.offZ));
-				EmberWorldData.get(ServerLifecycleHooks.getCurrentServer().overworld()).setDirty();
+				EmberWorldData.get((ServerLevel) event.level).setDirty();
 			}
 		}
 	}
