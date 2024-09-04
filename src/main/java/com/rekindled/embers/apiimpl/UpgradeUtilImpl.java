@@ -92,7 +92,7 @@ public class UpgradeUtilImpl implements IUpgradeUtil {
 
 	@Override
 	public int getWorkTime(BlockEntity tile, int time, List<UpgradeContext> list) {
-		double speedmod = getTotalSpeedModifier(tile,list);
+		double speedmod = getTotalSpeedModifier(tile, list);
 		if (speedmod == 0) //Stop.
 			return Integer.MAX_VALUE;
 		return (int)(time * (1.0 / speedmod));

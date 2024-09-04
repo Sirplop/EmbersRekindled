@@ -174,8 +174,8 @@ public class CrystalSeedBlockEntity extends BlockEntity implements IEmberInjecta
 
 	@Override
 	public void inject(BlockEntity injector, double ember) {
-		size++;
-		addExperience(1);
+		size += ember;
+		addExperience((int) ember);
 		setChanged();
 	}
 

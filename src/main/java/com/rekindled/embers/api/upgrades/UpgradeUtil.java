@@ -39,7 +39,7 @@ public class UpgradeUtil {
 	}
 
 	public static int getWorkTime(BlockEntity tile, int time, List<UpgradeContext> list) {
-		return IMPL.getWorkTime(tile,time,list);
+		return IMPL.getWorkTime(tile, time, list);
 	}
 
 	//DO NOT CALL FROM AN UPGRADE'S doWork METHOD!!
@@ -89,6 +89,6 @@ public class UpgradeUtil {
 	}
 
 	public static void throwEvent(BlockEntity tile, UpgradeEvent event, List<UpgradeContext> list) {
-		IMPL.throwEvent(tile,event,list);
+		IMPL.throwEvent(tile, event, list);
 	}
 }
