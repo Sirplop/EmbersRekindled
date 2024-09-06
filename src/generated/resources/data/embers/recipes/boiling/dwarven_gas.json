@@ -2,7 +2,7 @@
   "type": "embers:boiling",
   "input": {
     "amount": 1,
-    "name": "embers:dwarven_oil"
+    "fluid": "embers:dwarven_oil"
   },
   "output": {
     "amount": 1,

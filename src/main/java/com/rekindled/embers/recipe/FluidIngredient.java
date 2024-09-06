@@ -188,7 +188,7 @@ public abstract class FluidIngredient {
 		}
 
 		// fluid match
-		if (json.has("name")) {
+		if (json.has("name") || json.has("fluid")) {
 			// don't set both, obviously an error
 			if (json.has("tag")) {
 				throw new JsonSyntaxException("An ingredient entry is either a tag or an fluid, not both");
@@ -297,7 +297,7 @@ public abstract class FluidIngredient {
 		@Override
 		public JsonElement serialize() {
 			JsonObject object = new JsonObject();
-			object.addProperty("name", Objects.requireNonNull(ForgeRegistries.FLUIDS.getResourceKey(fluid).get().location()).toString());
+			object.addProperty("fluid", Objects.requireNonNull(ForgeRegistries.FLUIDS.getResourceKey(fluid).get().location()).toString());
 			object.addProperty("amount", amount);
 			return object;
 		}
@@ -317,7 +317,7 @@ public abstract class FluidIngredient {
 		 * @return Fluid ingredient instance
 		 */
 		private static FluidMatch deserialize(JsonObject json) {
-			String fluidName = GsonHelper.getAsString(json, "name");
+			String fluidName = GsonHelper.getAsString(json, "fluid", GsonHelper.getAsString(json, "name", ""));
 			Fluid fluid = ForgeRegistries.FLUIDS.getValue(new ResourceLocation(fluidName));
 			if (fluid == null || fluid == Fluids.EMPTY) {
 				throw new JsonSyntaxException("Unknown fluid '" + fluidName + "'");
