@@ -243,7 +243,8 @@ public class ResearchManager {
 		aspecti = new ResearchBase("aspecti", new ItemStack(RegistryManager.DAWNSTONE_ASPECTUS.get()), 12, 1);
 		cinder_plinth = new ResearchBase("cinder_plinth", new ItemStack(RegistryManager.CINDER_PLINTH_ITEM.get()), 9, 0);
 		beam_cannon = new ResearchBase("beam_cannon", new ItemStack(RegistryManager.BEAM_CANNON_ITEM.get()), 9, 7);
-		alchemy = new ResearchBase("alchemy", new ItemStack(RegistryManager.ALCHEMY_TABLET_ITEM.get()), 9, 4).addAncestor(aspecti).addAncestor(beam_cannon);
+		alchemy = new ResearchBase("alchemy", new ItemStack(RegistryManager.ALCHEMY_TABLET_ITEM.get()), 9, 4)
+				.addPage(new ResearchBase("alchemy_page_2", new ItemStack(RegistryManager.ALCHEMY_TABLET_ITEM.get()), 0, 0)).addAncestor(aspecti).addAncestor(beam_cannon);
 
 		//TRANSMUTATION
 		waste = new ResearchBase("waste", new ItemStack(RegistryManager.ALCHEMICAL_WASTE.get()), 6, 0)
