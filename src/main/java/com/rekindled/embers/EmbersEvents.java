@@ -112,7 +112,7 @@ public class EmbersEvents {
 			if (heldStack.getItem() instanceof ITyrfingWeapon tyrfing) {
 				tyrfing.attack(event, event.getEntity().getAttribute(Attributes.ARMOR).getValue());
 			}
-			addHeat(source, heldStack, 1.0f);
+			addHeat(source, heldStack, Math.max(1.0f, 0.5f * event.getAmount()));
 		}
 	}
 
