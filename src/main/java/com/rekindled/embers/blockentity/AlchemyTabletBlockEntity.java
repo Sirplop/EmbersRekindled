@@ -188,9 +188,10 @@ public class AlchemyTabletBlockEntity extends BlockEntity implements ISparkable,
 		blockEntity.upgrades = UpgradeUtil.getUpgrades(level, pos, UPGRADE_SIDES); //Defer to when events are added to the upgrade system
 		UpgradeUtil.verifyUpgrades(blockEntity, blockEntity.upgrades);
 		if (blockEntity.progress > 0) {
+			UpgradeUtil.doWork(blockEntity, blockEntity.upgrades);
 			if (level.getGameTime() % 10 == 0) {
 				List<AlchemyPedestalTopBlockEntity> pedestals = getNearbyPedestals(level, pos);
-				if (blockEntity.progress < PROCESSING_TIME) {
+				if (blockEntity.progress < UpgradeUtil.getWorkTime(blockEntity, PROCESSING_TIME, blockEntity.upgrades)) {
 					blockEntity.progress++;
 					blockEntity.setChanged();
 				} else {
@@ -283,7 +284,8 @@ public class AlchemyTabletBlockEntity extends BlockEntity implements ISparkable,
 		UpgradeUtil.throwEvent(this, event, upgrades);
 
 		if (event.getRecipe() != null) {
-			((ServerLevel) level).sendParticles(AlchemyCircleParticleOptions.DEFAULT, worldPosition.getX() + 0.5, worldPosition.getY() + 1.01, worldPosition.getZ() + 0.5, 5, 0, 0, 0, 1);
+			int time = UpgradeUtil.getWorkTime(this, PROCESSING_TIME * 10, upgrades);
+			((ServerLevel) level).sendParticles(new AlchemyCircleParticleOptions(GlowParticleOptions.EMBER_COLOR, 1.0F, time + 20), worldPosition.getX() + 0.5, worldPosition.getY() + 1.01, worldPosition.getZ() + 0.5, 5, 0, 0, 0, 1);
 			progress = 1;
 			setChanged();
 			level.playSound(null, worldPosition, EmbersSounds.ALCHEMY_START.get(), SoundSource.BLOCKS, 1.0f, 1.0f);
