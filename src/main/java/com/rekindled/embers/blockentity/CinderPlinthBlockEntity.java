@@ -17,6 +17,7 @@ import com.rekindled.embers.api.tile.IExtraCapabilityInformation;
 import com.rekindled.embers.api.tile.IExtraDialInformation;
 import com.rekindled.embers.api.upgrades.UpgradeContext;
 import com.rekindled.embers.api.upgrades.UpgradeUtil;
+import com.rekindled.embers.datagen.EmbersItemTags;
 import com.rekindled.embers.datagen.EmbersSounds;
 import com.rekindled.embers.particle.SmokeParticleOptions;
 import com.rekindled.embers.power.DefaultEmberCapability;
@@ -56,6 +57,12 @@ public class CinderPlinthBlockEntity extends BlockEntity implements ISoundContro
 		}
 	};
 	public ItemStackHandler inventory = new ItemStackHandler(1) {
+
+		@Override
+		public boolean isItemValid(int slot, ItemStack stack) {
+			return !stack.is(EmbersItemTags.CINDER_PLINTH_BLACKLIST);
+		}
+
 		@Override
 		protected void onContentsChanged(int slot) {
 			CinderPlinthBlockEntity.this.setChanged();

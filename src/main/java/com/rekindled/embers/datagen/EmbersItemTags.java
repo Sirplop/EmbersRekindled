@@ -37,6 +37,8 @@ public class EmbersItemTags extends ItemTagsProvider {
 
 	public static final TagKey<Item> GAUGE_OVERLAY = ItemTags.create(new ResourceLocation(Embers.MODID, "gauge_overlay"));
 
+	public static final TagKey<Item> CINDER_PLINTH_BLACKLIST = ItemTags.create(new ResourceLocation(Embers.MODID, "cinder_plinth_blacklist"));
+
 	public static final TagKey<Item> AUGMENTABLE = ItemTags.create(new ResourceLocation(Embers.MODID, "augmentables"));
 	public static final TagKey<Item> AUGMENTABLE_TOOLS_AND_ARMORS = ItemTags.create(new ResourceLocation(Embers.MODID, "augmentables/tools_armors"));
 	public static final TagKey<Item> AUGMENTABLE_TOOLS = ItemTags.create(new ResourceLocation(Embers.MODID, "augmentables/tools"));
@@ -144,6 +146,7 @@ public class EmbersItemTags extends ItemTagsProvider {
 		tag(INSCRIBABLE_PAPER).add(Items.PAPER);
 		tag(NORMAL_WALK_SPEED_TOOL).add(RegistryManager.BLAZING_RAY.get()).add(RegistryManager.CINDER_STAFF.get());
 		tag(GAUGE_OVERLAY).add(RegistryManager.ATMOSPHERIC_GAUGE_ITEM.get());
+		tag(CINDER_PLINTH_BLACKLIST).add(Items.NETHERITE_INGOT);
 
 		tag(AUGMENTABLE).addTag(AUGMENTABLE_TOOLS).addTag(AUGMENTABLE_PROJECTILE_WEAPONS).addTag(AUGMENTABLE_ARMORS);
 		tag(AUGMENTABLE_TOOLS_AND_ARMORS).addTag(AUGMENTABLE_TOOLS).addTag(AUGMENTABLE_ARMORS);
